@@ -15,10 +15,10 @@ setup(
     packages=find_packages(exclude=("tests",)),
     entry_points={
         "sqlalchemy.dialects": [
-            "airtable = graphqldb.dialect:APSWAirtableDialect",
+            "airtable = airtabledb.dialect:APSWAirtableDialect",
         ],
         "shillelagh.adapter": [
-            "airtable = graphqldb.adapter:AirtableAdapter",
+            "airtable = airtabledb.adapter:AirtableAdapter",
         ],
     },
     install_requires=(
