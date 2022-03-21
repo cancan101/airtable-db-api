@@ -25,6 +25,7 @@ class AirtableAdapter(Adapter):
 
         self._table_api = Table(api_key, base_id, table)
 
+        fields: List[str]
         if self.base_metadata is not None:
             table_metadata = [
                 x for k, x in self.base_metadata.items() if x["name"] == table
@@ -36,7 +37,9 @@ class AirtableAdapter(Adapter):
             fields = self._table_api.first()["fields"]
             self.strict_col = False
 
-        self.columns = dict({k: String() for k in fields}, id=String())
+        self.columns: Dict[str, Field] = dict(
+            {k: String() for k in fields}, id=String()
+        )
 
     @staticmethod
     def supports(uri: str, fast: bool = True, **kwargs: Any) -> Optional[bool]:
