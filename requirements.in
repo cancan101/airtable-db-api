@@ -1,0 +1,4 @@
+pyairtable
+shillelagh
+sqlalchemy[mypy]
+typing-extensions
