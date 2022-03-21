@@ -27,16 +27,26 @@ class AirtableAdapter(Adapter):
 
         fields: List[str]
         if self.base_metadata is not None:
+            # TODO(cancan101): Better error handling here
+            # We search by name here.
+            # Alternatively we could have the user specify the name as an id
             table_metadata = [
-                x for k, x in self.base_metadata.items() if x["name"] == table
+                table_value
+                for table_value in self.base_metadata.values()
+                if table_value["name"] == table
             ][0]
             columns_metadata = table_metadata["columns"]
             fields = [col["name"] for col in columns_metadata]
             self.strict_col = True
         else:
+            # This introspects the first row in the table.
+            # This is super not reliable
+            # as Airtable removes the key if the value is empty.
+            # We should probably look at more than one entry.
             fields = self._table_api.first()["fields"]
             self.strict_col = False
 
+        # TODO(cancan101): parse out types
         self.columns: Dict[str, Field] = dict(
             {k: String() for k in fields}, id=String()
         )
