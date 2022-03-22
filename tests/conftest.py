@@ -20,3 +20,9 @@ def engine_with_meta() -> Engine:
 def connection_with_meta(engine_with_meta: Engine) -> Generator[Connection, None, None]:
     with engine_with_meta.connect() as connection:
         yield connection
+
+
+@pytest.fixture
+def connection(engine: Engine) -> Generator[Connection, None, None]:
+    with engine.connect() as connection:
+        yield connection

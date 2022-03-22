@@ -32,7 +32,7 @@ class APSWAirtableDialect(APSWDialect):
     ) -> List[str]:
         if self.base_metadata is not None:
             return [table["name"] for table in self.base_metadata.values()]
-        raise NotImplementedError()
+        return []
 
     def create_connect_args(
         self,
