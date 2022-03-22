@@ -1,4 +1,5 @@
-from typing import Any, Dict, List, Tuple
+import urllib.parse
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
 from sqlalchemy.engine import Connection
@@ -9,6 +10,27 @@ from .types import BaseMetadata
 # -----------------------------------------------------------------------------
 
 ADAPTER_NAME = "airtable"
+
+# -----------------------------------------------------------------------------
+
+
+def extract_query_host(
+    url: URL,
+) -> Tuple[Dict[str, Union[str, Sequence[str]]], Optional[str]]:
+    """
+    Extract the query from the SQLAlchemy URL.
+    """
+    if url.query:
+        return dict(url.query), url.host
+
+    # there's a bug in how SQLAlchemy <1.4 handles URLs without trailing / in hosts,
+    # putting the query string in the host; handle that case here
+    if url.host and "?" in url.host:
+        real_host, query_str = url.host.split("?", 1)
+        return dict(urllib.parse.parse_qsl(query_str)), real_host
+
+    return {}, url.host
+
 
 # -----------------------------------------------------------------------------
 
@@ -31,7 +53,16 @@ class APSWAirtableDialect(APSWDialect):
     def get_table_names(
         self, connection: Connection, schema: str = None, **kwargs: Any
     ) -> List[str]:
-        if self.base_metadata is not None:
+
+        url_query, _ = extract_query_host(connection.engine.url)
+        tables = url_query.get("tables")
+
+        if isinstance(tables, str):
+            tables = [tables]
+
+        if tables is not None:
+            return list(tables)
+        elif self.base_metadata is not None:
             return [table["name"] for table in self.base_metadata.values()]
         return []
 
@@ -49,11 +80,13 @@ class APSWAirtableDialect(APSWDialect):
         if url.password and self.airtable_api_key:
             raise ValueError("Both password and airtable_api_key were provided")
 
+        _, url_host = extract_query_host(url)
+
         # At some point we might have args
         adapter_kwargs = {
             ADAPTER_NAME: {
                 "api_key": self.airtable_api_key or url.password,
-                "base_id": url.host,
+                "base_id": url_host,
                 "base_metadata": self.base_metadata,
             }
         }
