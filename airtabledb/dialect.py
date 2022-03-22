@@ -1,7 +1,9 @@
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, List, Tuple
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
-from sqlalchemy.engine.url import URL
+from sqlalchemy.engine import URL, Connection
+
+from .types import BaseMetadata
 
 # -----------------------------------------------------------------------------
 
@@ -11,12 +13,12 @@ ADAPTER_NAME = "airtable"
 
 
 class APSWAirtableDialect(APSWDialect):
-    supports_statement_cache = False
+    supports_statement_cache = True
 
     def __init__(
         self,
         airtable_api_key: str = None,
-        base_metadata: Dict[str, dict] = None,
+        base_metadata: BaseMetadata = None,
         **kwargs: Any,
     ):
         # We tell Shillelagh that this dialect supports just one adapter
@@ -25,11 +27,12 @@ class APSWAirtableDialect(APSWDialect):
         self.airtable_api_key = airtable_api_key
         self.base_metadata = base_metadata
 
-    # We need either the metadata API or some source of metadata for this
-    #     def get_table_names(
-    #         self, connection: Connection, schema: str = None, **kwargs: Any
-    #     ) -> List[str]:
-    #         return []
+    def get_table_names(
+        self, connection: Connection, schema: str = None, **kwargs: Any
+    ) -> List[str]:
+        if self.base_metadata is not None:
+            return [table["name"] for table in self.base_metadata.values()]
+        raise NotImplementedError()
 
     def create_connect_args(
         self,

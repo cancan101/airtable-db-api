@@ -5,6 +5,8 @@ from shillelagh.adapters.base import Adapter
 from shillelagh.fields import Field, Filter, String
 from shillelagh.typing import RequestedOrder
 
+from .types import BaseMetadata
+
 # -----------------------------------------------------------------------------
 
 
@@ -16,7 +18,7 @@ class AirtableAdapter(Adapter):
         table: str,
         base_id: str,
         api_key: str,
-        base_metadata: Dict[str, dict],
+        base_metadata: BaseMetadata,
     ):
         super().__init__()
 

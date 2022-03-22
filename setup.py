@@ -22,6 +22,7 @@ setup(
         ],
     },
     install_requires=(
+        "pyairtable",
         "shillelagh >= 1.0.6",
         "sqlalchemy >= 1.3.0",
         "typing-extensions",
