@@ -27,7 +27,7 @@ def extract_query_host(
     # putting the query string in the host; handle that case here
     if url.host and "?" in url.host:
         real_host, query_str = url.host.split("?", 1)
-        return dict(urllib.parse.parse_qsl(query_str)), real_host  # pragma: no cover
+        return dict(urllib.parse.parse_qsl(query_str)), real_host
 
     return {}, url.host
 
