@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from sqlalchemy import inspect
+from sqlalchemy import create_engine, inspect
 from sqlalchemy.engine import URL, Connection, Engine, make_url
 
 from airtabledb.dialect import APSWAirtableDialect, extract_query_host
@@ -10,12 +10,34 @@ def test_create_engine(engine: Engine) -> None:
     pass
 
 
-def test_get_table_names_with_meta(connection_with_meta: Connection) -> None:
-    insp = inspect(connection_with_meta)
-
-    tables = insp.get_table_names()
+def test_get_table_names_with_meta() -> None:
+    base_metadata = {"tblx": {"name": "name1"}}
+    with create_engine(
+        "airtable://api@base", base_metadata=base_metadata
+    ).connect() as connection:
+        insp = inspect(connection)
+        tables = insp.get_table_names()
 
     assert "name1" in tables
+
+
+def test_get_table_names_with_table_name() -> None:
+    with create_engine("airtable://api@base?tables=name2").connect() as connection:
+        insp = inspect(connection)
+        tables = insp.get_table_names()
+
+    assert "name2" in tables
+
+
+def test_get_table_names_with_table_names() -> None:
+    with create_engine(
+        "airtable://api@base?tables=name2&tables=name3"
+    ).connect() as connection:
+        insp = inspect(connection)
+        tables = insp.get_table_names()
+
+    assert "name2" in tables
+    assert "name3" in tables
 
 
 def test_get_table_names(connection: Connection) -> None:
