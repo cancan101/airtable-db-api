@@ -1,7 +1,8 @@
 from typing import Any, Dict, List, Tuple
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
-from sqlalchemy.engine import URL, Connection
+from sqlalchemy.engine import Connection
+from sqlalchemy.engine.url import URL
 
 from .types import BaseMetadata
 
@@ -45,13 +46,13 @@ class APSWAirtableDialect(APSWDialect):
                 f"Unexpected adapter_kwargs found: {kwargs['adapter_kwargs']}"
             )
 
-        if url.username and self.airtable_api_key:
-            raise ValueError("Both username and airtable_api_key were provided")
+        if url.password and self.airtable_api_key:
+            raise ValueError("Both password and airtable_api_key were provided")
 
         # At some point we might have args
         adapter_kwargs = {
             ADAPTER_NAME: {
-                "api_key": self.airtable_api_key or url.username,
+                "api_key": self.airtable_api_key or url.password,
                 "base_id": url.host,
                 "base_metadata": self.base_metadata,
             }
