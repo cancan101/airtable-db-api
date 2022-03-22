@@ -61,7 +61,7 @@ class APSWAirtableDialect(APSWDialect):
             tables = [tables]
 
         if tables is not None:
-            return tables
+            return list(tables)
         elif self.base_metadata is not None:
             return [table["name"] for table in self.base_metadata.values()]
         return []
