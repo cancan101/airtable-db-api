@@ -23,6 +23,10 @@ def test_maybe_list_string_list():
     with pytest.raises(TypeError):
         assert MaybeListString().parse([{}])
 
+    # At some point we may handle this case differently (w/o error)
+    with pytest.raises(ValueError):
+        assert MaybeListString().parse([1, 2])
+
 
 def test_maybe_list_string_special():
     assert MaybeListString().parse({"specialValue": "NaN"}) is None
