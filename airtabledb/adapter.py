@@ -51,6 +51,8 @@ class AirtableAdapter(Adapter):
                 fields = self._table_api.first()["fields"].keys()
             # Or peek at specified number of rows
             else:
+                # We have an explicit type check here as the Airtable API
+                # just ignores the value if it isn't valid.
                 if not isinstance(peek_rows, int):
                     raise TypeError(
                         f"peek_rows should be an int. Got: {type(peek_rows)}"
