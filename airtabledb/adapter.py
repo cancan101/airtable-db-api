@@ -26,12 +26,12 @@ def guess_field(values: List[Any]) -> Field:
         elif types0 is bool:
             return Boolean()
         elif types0 is list:
-            # do more work + make a handler for this
+            # TODO(cancan101): do more work + make a Field for this
             return MaybeListString()
     elif types == {float, int}:
         return Float()
     elif types == {float, dict} or types == {int, dict} or types == {int, float, dict}:
-        # TODO check the dict + make a handler for this
+        # TODO(cancan101) check the dict + make a Field for this
         # This seems safest as there are cases where we get floats and ints
         return MaybeListString()
 
@@ -98,7 +98,6 @@ class AirtableAdapter(Adapter):
 
             self.strict_col = False
 
-            # TODO(cancan101): parse out types
             columns = dict(
                 {k: guess_field(v) for k, v in field_values.items()}, id=String()
             )
@@ -107,7 +106,7 @@ class AirtableAdapter(Adapter):
 
     @staticmethod
     def supports(uri: str, fast: bool = True, **kwargs: Any) -> Optional[bool]:
-        # TODO the slow path here could connect to the GQL Server
+        # TODO the slow path here could connect to the Airtable API
         return True
 
     @staticmethod
