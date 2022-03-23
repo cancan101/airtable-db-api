@@ -48,7 +48,7 @@ class AirtableAdapter(Adapter):
         else:
             # This introspects the just first row in the table.
             if peek_rows is None or peek_rows == 1:
-                fields = self._table_api.first()["fields"]
+                fields = self._table_api.first()["fields"].keys()
             # Or peek at specified number of rows
             else:
                 if not isinstance(peek_rows, int):
