@@ -5,6 +5,7 @@ from shillelagh.adapters.base import Adapter
 from shillelagh.fields import Field, Filter, String
 from shillelagh.typing import RequestedOrder
 
+from .fields import MaybeListString
 from .types import BaseMetadata
 
 # -----------------------------------------------------------------------------
@@ -50,7 +51,7 @@ class AirtableAdapter(Adapter):
 
         # TODO(cancan101): parse out types
         self.columns: Dict[str, Field] = dict(
-            {k: String() for k in fields}, id=String()
+            {k: MaybeListString() for k in fields}, id=String()
         )
 
     @staticmethod
