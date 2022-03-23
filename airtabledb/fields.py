@@ -30,8 +30,8 @@ class MaybeListString(
             elif len(value) == 1:
                 ret = value[0]
                 # TODO(cancan101): Do we have to handle nested arrays / special types?
-                if not isinstance(ret, (str, int, float)):
-                    raise TypeError(f"Unknown type: {type(value)}")
+                if ret is not None and not isinstance(ret, (str, int, float)):
+                    raise TypeError(f"Unknown type: {type(ret)}")
                 return ret
             else:
                 raise ValueError("Unable to handle list of length > 1")

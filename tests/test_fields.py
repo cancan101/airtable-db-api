@@ -18,6 +18,7 @@ def test_maybe_list_string_list():
     assert MaybeListString().parse(["a"]) == "a"
     assert MaybeListString().parse([1]) == 1
     assert MaybeListString().parse([1.5]) == 1.5
+    assert MaybeListString().parse([None]) is None
 
     with pytest.raises(TypeError):
         assert MaybeListString().parse([{}])
