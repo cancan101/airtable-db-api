@@ -1,4 +1,4 @@
-from typing import Any, Dict, Iterator, List, Optional, Tuple
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Tuple
 
 from pyairtable import Table
 from shillelagh.adapters.base import Adapter
@@ -19,7 +19,8 @@ class AirtableAdapter(Adapter):
         table: str,
         base_id: str,
         api_key: str,
-        base_metadata: BaseMetadata,
+        base_metadata: Optional[BaseMetadata],
+        peek_rows: Optional[int],
     ):
         super().__init__()
 
@@ -28,7 +29,7 @@ class AirtableAdapter(Adapter):
 
         self._table_api = Table(api_key, base_id, table)
 
-        fields: List[str]
+        fields: Iterable[str]
         if self.base_metadata is not None:
             # TODO(cancan101): Better error handling here
             # We search by name here.
@@ -41,12 +42,26 @@ class AirtableAdapter(Adapter):
             columns_metadata = table_metadata["columns"]
             fields = [col["name"] for col in columns_metadata]
             self.strict_col = True
+        # Attempts introspection by looking at data.
+        # This is super not reliable
+        # as Airtable removes the key if the value is empty.
         else:
-            # This introspects the first row in the table.
-            # This is super not reliable
-            # as Airtable removes the key if the value is empty.
-            # We should probably look at more than one entry.
-            fields = self._table_api.first()["fields"]
+            # This introspects the just first row in the table.
+            if peek_rows is None or peek_rows == 1:
+                fields = self._table_api.first()["fields"].keys()
+            # Or peek at specified number of rows
+            else:
+                # We have an explicit type check here as the Airtable API
+                # just ignores the value if it isn't valid.
+                if not isinstance(peek_rows, int):
+                    raise TypeError(
+                        f"peek_rows should be an int. Got: {type(peek_rows)}"
+                    )
+
+                fields = set()
+                for row in self._table_api.all(max_records=peek_rows):
+                    fields |= row["fields"].keys()
+
             self.strict_col = False
 
         # TODO(cancan101): parse out types

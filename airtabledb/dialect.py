@@ -80,7 +80,13 @@ class APSWAirtableDialect(APSWDialect):
         if url.password and self.airtable_api_key:
             raise ValueError("Both password and airtable_api_key were provided")
 
-        _, url_host = extract_query_host(url)
+        url_query, url_host = extract_query_host(url)
+        peek_rows = None
+        if "peek_rows" in url_query:
+            peek_rows_raw = url_query["peek_rows"]
+            if not isinstance(peek_rows_raw, str):
+                peek_rows_raw = peek_rows_raw[-1]
+            peek_rows = int(peek_rows_raw)
 
         # At some point we might have args
         adapter_kwargs = {
@@ -88,6 +94,7 @@ class APSWAirtableDialect(APSWDialect):
                 "api_key": self.airtable_api_key or url.password,
                 "base_id": url_host,
                 "base_metadata": self.base_metadata,
+                "peek_rows": peek_rows,
             }
         }
 

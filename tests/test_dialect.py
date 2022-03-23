@@ -84,3 +84,21 @@ def test_extract_query_host_no_query():
     query, host = extract_query_host(URL.create(drivername="drive", host="myhost"))
     assert host == "myhost"
     assert query == {}
+
+
+def test_peek_rows_default():
+    url_http = make_url("airtable://foo")
+    _, kwargs = APSWAirtableDialect().create_connect_args(url_http)
+    assert _get_adapter_kwargs(kwargs)["peek_rows"] is None
+
+
+def test_peek_rows_single():
+    url_http = make_url("airtable://foo?peek_rows=12")
+    _, kwargs = APSWAirtableDialect().create_connect_args(url_http)
+    assert _get_adapter_kwargs(kwargs)["peek_rows"] == 12
+
+
+def test_peek_rows_dupe():
+    url_http = make_url("airtable://foo?peek_rows=12&peek_rows=13")
+    _, kwargs = APSWAirtableDialect().create_connect_args(url_http)
+    assert _get_adapter_kwargs(kwargs)["peek_rows"] == 13
