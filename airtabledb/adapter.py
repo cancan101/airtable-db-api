@@ -1,12 +1,14 @@
 from collections import defaultdict
-from typing import Any, Dict, Iterable, Iterator, List, Optional, Tuple
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Tuple, Type
 
 from pyairtable import Table
 from shillelagh.adapters.base import Adapter
-from shillelagh.fields import Boolean, Field, Filter, Float, Order, String
+from shillelagh.fields import Boolean, Field, Float, Order, String
+from shillelagh.filters import Equal, Filter, IsNotNull, IsNull, NotEqual, Range
 from shillelagh.typing import RequestedOrder
 
 from .fields import MaybeListString
+from .formulas import get_airtable_formula
 from .types import BaseMetadata, TypedDict
 
 # -----------------------------------------------------------------------------
@@ -14,9 +16,15 @@ from .types import BaseMetadata, TypedDict
 
 class FieldKwargs(TypedDict, total=False):
     order: Order
+    exact: bool
+    filters: List[Type[Filter]]
 
 
-FIELD_KWARGS: FieldKwargs = {"order": Order.ANY}
+FIELD_KWARGS: FieldKwargs = {
+    "order": Order.ANY,
+    "filters": [IsNull, IsNotNull, Range, Equal, NotEqual],
+    "exact": True,
+}
 
 
 def guess_field(values: List[Any]) -> Field:
@@ -131,7 +139,14 @@ class AirtableAdapter(Adapter):
         order: List[Tuple[str, RequestedOrder]],
     ) -> Iterator[Dict[str, Any]]:
         sort = get_airtable_sort(order)
-        for page in self._table_api.iterate(sort=sort):
+
+        if bounds:
+            formula = get_airtable_formula(bounds)
+        else:
+            formula = None
+
+        # Pass fields here
+        for page in self._table_api.iterate(sort=sort, formula=formula):
             for result in page:
                 yield dict(
                     {
