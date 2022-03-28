@@ -8,6 +8,12 @@ TRUE = "TRUE()"
 FALSE = "FALSE()"
 
 
+def AND_BETTER(*args):
+    if len(args) == 1:
+        return args[0]
+    return base_formulas.AND(*args)
+
+
 def NOT_EQUAL(left: Any, right: Any) -> str:
     """
     Creates an not equality assertion
@@ -61,12 +67,12 @@ def get_formula(field_name: str, filter: Filter) -> str:
             else:
                 parts.append(LT(base_formulas.FIELD(field_name), end_airtable_value))
 
-        return base_formulas.AND(*parts)
+        return AND_BETTER(*parts)
     else:
         raise NotImplementedError(filter)
 
 
 def get_airtable_formula(bounds: Dict[str, Filter]) -> str:
-    return base_formulas.AND(
+    return AND_BETTER(
         *(get_formula(field_name, filter) for field_name, filter in bounds.items())
     )

@@ -18,16 +18,16 @@ def test_get_formula_is_not_null():
 
 
 def test_get_formula_range():
-    assert get_formula("the field", filters.Range(start=0)) == "AND({the field} > 0)"
+    assert get_formula("the field", filters.Range(start=0)) == "{the field} > 0"
     assert (
         get_formula("the field", filters.Range(start=0, include_start=True))
-        == "AND({the field} >= 0)"
+        == "{the field} >= 0"
     )
 
-    assert get_formula("the field", filters.Range(end=0)) == "AND({the field} < 0)"
+    assert get_formula("the field", filters.Range(end=0)) == "{the field} < 0"
     assert (
         get_formula("the field", filters.Range(end=0, include_end=True))
-        == "AND({the field} <= 0)"
+        == "{the field} <= 0"
     )
 
     assert (
@@ -39,12 +39,12 @@ def test_get_formula_range():
 def test_get_airtable_formula():
     assert (
         get_airtable_formula({"the field": filters.IsNull()})
-        == 'AND(IF({the field} & "", FALSE(), TRUE()))'
+        == 'IF({the field} & "", FALSE(), TRUE())'
     )
 
     assert (
         get_airtable_formula(
             {"the field": filters.IsNull(), "other field": filters.Range(start=2)}
         )
-        == 'AND(IF({the field} & "", FALSE(), TRUE()),AND({other field} > 2))'
+        == 'AND(IF({the field} & "", FALSE(), TRUE()),{other field} > 2)'
     )
