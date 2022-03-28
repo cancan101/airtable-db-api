@@ -4,7 +4,7 @@ from typing import Any, Dict, Iterable, Iterator, List, Optional, Tuple, Type
 from pyairtable import Table
 from shillelagh.adapters.base import Adapter
 from shillelagh.fields import Boolean, Field, Float, Order, String
-from shillelagh.filters import Filter, IsNotNull, IsNull, Range
+from shillelagh.filters import Equal, Filter, IsNotNull, IsNull, NotEqual, Range
 from shillelagh.typing import RequestedOrder
 
 from .fields import MaybeListString
@@ -22,7 +22,7 @@ class FieldKwargs(TypedDict, total=False):
 
 FIELD_KWARGS: FieldKwargs = {
     "order": Order.ANY,
-    "filters": [IsNull, IsNotNull, Range],
+    "filters": [IsNull, IsNotNull, Range, Equal, NotEqual],
     "exact": True,
 }
 

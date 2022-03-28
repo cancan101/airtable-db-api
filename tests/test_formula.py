@@ -48,3 +48,19 @@ def test_get_airtable_formula():
         )
         == 'AND(IF({the field} & "", FALSE(), TRUE()),{other field} > 2)'
     )
+
+
+def test_get_formula_eq():
+    assert get_formula("the field", filters.Equal(33)) == "{the field}=33"
+
+    assert get_formula("the field", filters.Equal(33.5)) == "{the field}=33.5"
+
+    assert get_formula("the field", filters.Equal(True)) == "{the field}=1"
+
+    assert get_formula("the field", filters.Equal(False)) == "{the field}=0"
+
+    assert get_formula("the field", filters.Equal("foo bar")) == "{the field}='foo bar'"
+
+
+def test_get_formula_neq():
+    assert get_formula("the field", filters.NotEqual(33)) == "{the field}!=33"

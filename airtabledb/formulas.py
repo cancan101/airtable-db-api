@@ -1,7 +1,7 @@
 from typing import Any, Dict
 
 from pyairtable import formulas as base_formulas
-from shillelagh.filters import Filter, IsNotNull, IsNull, Range
+from shillelagh.filters import Equal, Filter, IsNotNull, IsNull, NotEqual, Range
 
 BLANK = "BLANK()"
 TRUE = "TRUE()"
@@ -68,6 +68,16 @@ def get_formula(field_name: str, filter: Filter) -> str:
                 parts.append(LT(base_formulas.FIELD(field_name), end_airtable_value))
 
         return AND_BETTER(*parts)
+    elif isinstance(filter, Equal):
+        return base_formulas.EQUAL(
+            base_formulas.FIELD(field_name),
+            base_formulas.to_airtable_value(filter.value),
+        )
+    elif isinstance(filter, NotEqual):
+        return NOT_EQUAL(
+            base_formulas.FIELD(field_name),
+            base_formulas.to_airtable_value(filter.value),
+        )
     else:
         raise NotImplementedError(filter)
 
