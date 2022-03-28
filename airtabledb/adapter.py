@@ -39,6 +39,22 @@ def NOT_EQUAL(left: Any, right: Any) -> str:
     return "{}!={}".format(left, right)
 
 
+def LE(left: Any, right: Any) -> str:
+    return "{} <= {}".format(left, right)
+
+
+def LT(left: Any, right: Any) -> str:
+    return "{} < {}".format(left, right)
+
+
+def GE(left: Any, right: Any) -> str:
+    return "{} >= {}".format(left, right)
+
+
+def GT(left: Any, right: Any) -> str:
+    return "{} > {}".format(left, right)
+
+
 def STR_CAST(left: Any) -> str:
     return '{} & ""'.format(left)
 
@@ -55,16 +71,16 @@ def get_formula(field_name: str, filter: Filter) -> str:
         if filter.start is not None:
             start_airtable_value = formulas.to_airtable_value(filter.start)
             if filter.include_start:
-                parts.append(f"{formulas.FIELD(field_name)} >= {start_airtable_value}")
+                parts.append(GE(formulas.FIELD(field_name), start_airtable_value))
             else:
-                parts.append(f"{formulas.FIELD(field_name)} > {start_airtable_value}")
+                parts.append(GT(formulas.FIELD(field_name), start_airtable_value))
 
         if filter.end is not None:
             end_airtable_value = formulas.to_airtable_value(filter.end)
             if filter.include_end:
-                parts.append(f"{formulas.FIELD(field_name)} <= {end_airtable_value}")
+                parts.append(LE(formulas.FIELD(field_name), end_airtable_value))
             else:
-                parts.append(f"{formulas.FIELD(field_name)} < {end_airtable_value}")
+                parts.append(LT(formulas.FIELD(field_name), end_airtable_value))
 
         return formulas.AND(*parts)
     else:
