@@ -53,14 +53,12 @@ class APSWAirtableDialect(APSWDialect):
     def get_table_names(
         self, connection: Connection, schema: str = None, **kwargs: Any
     ) -> List[str]:
-
         url_query, _ = extract_query_host(connection.engine.url)
         tables = url_query.get("tables")
 
-        if isinstance(tables, str):
-            tables = [tables]
-
         if tables is not None:
+            if isinstance(tables, str):
+                tables = [tables]
             return list(tables)
         elif self.base_metadata is not None:
             return [table["name"] for table in self.base_metadata.values()]

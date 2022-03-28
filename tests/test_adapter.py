@@ -1,7 +1,7 @@
-from shillelagh.fields import Boolean, Float, String
+from shillelagh.fields import Boolean, Float, Order, String
 
 from airtabledb import fields
-from airtabledb.adapter import guess_field
+from airtabledb.adapter import get_airtable_sort, guess_field
 
 
 def test_guess_field():
@@ -24,3 +24,11 @@ def test_guess_field():
 
     # Not sure if this comes up in practice
     assert type(guess_field(["a", 4])) is fields.MaybeListString
+
+
+def test_get_airtable_sort():
+    assert get_airtable_sort([]) == []
+    assert get_airtable_sort([("a", Order.ASCENDING), ("b", Order.DESCENDING)]) == [
+        "a",
+        "-b",
+    ]
