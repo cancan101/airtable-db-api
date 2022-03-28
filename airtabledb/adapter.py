@@ -16,31 +16,33 @@ class FieldKwargs(TypedDict, total=False):
     order: Order
 
 
+FIELD_KWARGS: FieldKwargs = {"order": Order.ANY}
+
+
 def guess_field(values: List[Any]) -> Field:
-    field_kwargs: FieldKwargs = {"order": Order.ANY}
     types = set(type(v) for v in values)
     if len(types) == 1:
         types0 = list(types)[0]
         if types0 is str:
-            return String(**field_kwargs)
+            return String(**FIELD_KWARGS)
         elif types0 is float:
-            return Float(**field_kwargs)
+            return Float(**FIELD_KWARGS)
         elif types0 is int:
             # This seems safest as there are cases where we get floats and ints
-            return Float(**field_kwargs)
+            return Float(**FIELD_KWARGS)
         elif types0 is bool:
-            return Boolean(**field_kwargs)
+            return Boolean(**FIELD_KWARGS)
         elif types0 is list:
             # TODO(cancan101): do more work + make a Field for this
-            return MaybeListString(**field_kwargs)
+            return MaybeListString(**FIELD_KWARGS)
     elif types == {float, int}:
-        return Float(**field_kwargs)
+        return Float(**FIELD_KWARGS)
     elif types == {float, dict} or types == {int, dict} or types == {int, float, dict}:
         # TODO(cancan101) check the dict + make a Field for this
         # This seems safest as there are cases where we get floats and ints
-        return MaybeListString(**field_kwargs)
+        return MaybeListString(**FIELD_KWARGS)
 
-    return MaybeListString(**field_kwargs)
+    return MaybeListString(**FIELD_KWARGS)
 
 
 def get_airtable_sort(order: List[Tuple[str, RequestedOrder]]) -> List[str]:
@@ -80,7 +82,7 @@ class AirtableAdapter(Adapter):
             fields = [col["name"] for col in columns_metadata]
             self.strict_col = True
 
-            columns = {k: MaybeListString() for k in fields}
+            columns = {k: MaybeListString(**FIELD_KWARGS) for k in fields}
 
         # Attempts introspection by looking at data.
         # This is super not reliable
