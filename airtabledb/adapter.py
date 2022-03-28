@@ -1,9 +1,10 @@
 from collections import defaultdict
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Tuple
 
-from pyairtable import Table
+from pyairtable import Table, formulas
 from shillelagh.adapters.base import Adapter
 from shillelagh.fields import Boolean, Field, Filter, Float, Order, String
+from shillelagh.filters import IsNotNull, IsNull, Range
 from shillelagh.typing import RequestedOrder
 
 from .fields import MaybeListString
@@ -16,7 +17,58 @@ class FieldKwargs(TypedDict, total=False):
     order: Order
 
 
-FIELD_KWARGS: FieldKwargs = {"order": Order.ANY}
+FIELD_KWARGS: FieldKwargs = {
+    "order": Order.ANY,
+    "filters": [IsNull, IsNotNull, Range],
+    "exact": True,
+}
+
+
+BLANK = "BLANK()"
+TRUE = "TRUE()"
+FALSE = "FALSE()"
+
+
+def NOT_EQUAL(left: Any, right: Any) -> str:
+    """
+    Creates an not equality assertion
+
+    >>> NOT_EQUAL(2,2)
+    '2!=2'
+    """
+    return "{}!={}".format(left, right)
+
+
+def STR_CAST(left: Any) -> str:
+    return '{} & ""'.format(left)
+
+
+def get_formula(field_name: str, filter: Filter) -> str:
+    if isinstance(filter, IsNull):
+        # https://community.airtable.com/t/blank-zero-problem/5662/13
+        return formulas.IF(STR_CAST(formulas.FIELD(field_name)), FALSE, TRUE)
+    elif isinstance(filter, IsNotNull):
+        # https://community.airtable.com/t/blank-zero-problem/5662/13
+        return formulas.IF(STR_CAST(formulas.FIELD(field_name)), TRUE, FALSE)
+    elif isinstance(filter, Range):
+        parts = []
+        if filter.start is not None:
+            start_airtable_value = formulas.to_airtable_value(filter.start)
+            if filter.include_start:
+                parts.append(f"{formulas.FIELD(field_name)} >= {start_airtable_value}")
+            else:
+                parts.append(f"{formulas.FIELD(field_name)} > {start_airtable_value}")
+
+        if filter.end is not None:
+            end_airtable_value = formulas.to_airtable_value(filter.end)
+            if filter.include_end:
+                parts.append(f"{formulas.FIELD(field_name)} <= {end_airtable_value}")
+            else:
+                parts.append(f"{formulas.FIELD(field_name)} < {end_airtable_value}")
+
+        return formulas.AND(*parts)
+    else:
+        raise NotImplementedError(filter)
 
 
 def guess_field(values: List[Any]) -> Field:
@@ -131,7 +183,19 @@ class AirtableAdapter(Adapter):
         order: List[Tuple[str, RequestedOrder]],
     ) -> Iterator[Dict[str, Any]]:
         sort = get_airtable_sort(order)
-        for page in self._table_api.iterate(sort=sort):
+
+        if bounds:
+            formula = formulas.AND(
+                *(
+                    get_formula(field_name, filter)
+                    for field_name, filter in bounds.items()
+                )
+            )
+        else:
+            formula = None
+
+        # Pass fields here
+        for page in self._table_api.iterate(sort=sort, formula=formula):
             for result in page:
                 yield dict(
                     {
