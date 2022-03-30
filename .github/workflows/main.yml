@@ -55,7 +55,7 @@ jobs:
           
       - name: Install self
         run: |
-          pip install --no-dependencies -e .
+          pip install --no-cache-dir --no-dependencies -e .
 
       - name: Test with pytest
         run: |
