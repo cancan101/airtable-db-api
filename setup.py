@@ -20,6 +20,9 @@ setup(
         "shillelagh.adapter": [
             "airtable = airtabledb.adapter:AirtableAdapter",
         ],
+        "superset.db_engine_specs": [
+            "airtable = airtabledb.db_engine_specs:AirtableEngineSpec"
+        ],
     },
     install_requires=(
         "pyairtable",
