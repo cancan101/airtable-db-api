@@ -5,24 +5,24 @@ from airtabledb.adapter import get_airtable_sort, guess_field
 
 
 def test_guess_field():
-    assert type(guess_field([1])) is fields.AirtableFloat
-    assert type(guess_field([1.5])) is fields.AirtableFloat
-    assert type(guess_field([1, 1.5])) is fields.AirtableFloat
+    assert guess_field([1])[0] is fields.AirtableFloat
+    assert guess_field([1.5])[0] is fields.AirtableFloat
+    assert guess_field([1, 1.5])[0] is fields.AirtableFloat
 
-    assert type(guess_field([True])) is Boolean
+    assert guess_field([True])[0] is Boolean
 
-    assert type(guess_field(["a"])) is String
+    assert guess_field(["a"])[0] is String
 
-    assert type(guess_field([1, {"specialValue": "NaN"}])) is fields.AirtableFloat
-    assert type(guess_field([1.5, {"specialValue": "NaN"}])) is fields.AirtableFloat
-    assert type(guess_field([1.5, 1, {"specialValue": "NaN"}])) is fields.AirtableFloat
+    assert guess_field([1, {"specialValue": "NaN"}])[0] is fields.AirtableFloat
+    assert guess_field([1.5, {"specialValue": "NaN"}])[0] is fields.AirtableFloat
+    assert guess_field([1.5, 1, {"specialValue": "NaN"}])[0] is fields.AirtableFloat
 
-    string_list_field = guess_field([["a"], ["b"]])
-    assert type(string_list_field) is fields.MaybeList
-    assert type(string_list_field.field) is String
+    string_list_field_cls, string_list_field_kwargs = guess_field([["a"], ["b"]])
+    assert string_list_field_cls is fields.OverList
+    assert type(string_list_field_kwargs["field"]) is String
 
     # Not sure if this comes up in practice
-    assert type(guess_field(["a", 4])) is fields.MaybeListString
+    assert guess_field(["a", 4])[0] is fields.MaybeListString
 
 
 def test_get_airtable_sort():
