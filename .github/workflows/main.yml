@@ -24,7 +24,7 @@ jobs:
           python-version: "3.9"
 
       - name: Cache pip
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           # This path is specific to Ubuntu
           path: ~/.cache/pip
@@ -62,7 +62,7 @@ jobs:
           pytest --cov=./ --cov-report=xml
 
       - name: Set up mypy cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .mypy_cache
           key: mypy1-${{ hashFiles('./airtabledb/**/*.py') }}-${{ hashFiles('./tests/**/*.py') }}
