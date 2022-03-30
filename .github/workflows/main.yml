@@ -52,10 +52,6 @@ jobs:
       - name: Test with mypy
         run: |
           mypy .
-          
-      - name: Install self
-        run: |
-          pip install -e .
 
       - name: Test with pytest
         run: |
