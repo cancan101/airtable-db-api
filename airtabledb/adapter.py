@@ -3,11 +3,11 @@ from typing import Any, Dict, Iterable, Iterator, List, Optional, Tuple, Type
 
 from pyairtable import Table
 from shillelagh.adapters.base import Adapter
-from shillelagh.fields import Boolean, Field, Float, Order, String
+from shillelagh.fields import Boolean, Field, Order, String
 from shillelagh.filters import Equal, Filter, IsNotNull, IsNull, NotEqual, Range
 from shillelagh.typing import RequestedOrder
 
-from .fields import MaybeListString
+from .fields import AirtableFloat, MaybeList, MaybeListString
 from .formulas import get_airtable_formula
 from .types import BaseMetadata, TypedDict
 
@@ -34,21 +34,22 @@ def guess_field(values: List[Any]) -> Field:
         if types0 is str:
             return String(**FIELD_KWARGS)
         elif types0 is float:
-            return Float(**FIELD_KWARGS)
+            return AirtableFloat(**FIELD_KWARGS)
         elif types0 is int:
             # This seems safest as there are cases where we get floats and ints
-            return Float(**FIELD_KWARGS)
+            return AirtableFloat(**FIELD_KWARGS)
         elif types0 is bool:
             return Boolean(**FIELD_KWARGS)
         elif types0 is list:
-            # TODO(cancan101): do more work + make a Field for this
-            return MaybeListString(**FIELD_KWARGS)
+            return MaybeList(
+                guess_field([v for vi in values for v in vi]), **FIELD_KWARGS
+            )
     elif types == {float, int}:
-        return Float(**FIELD_KWARGS)
+        return AirtableFloat(**FIELD_KWARGS)
     elif types == {float, dict} or types == {int, dict} or types == {int, float, dict}:
-        # TODO(cancan101) check the dict + make a Field for this
         # This seems safest as there are cases where we get floats and ints
-        return MaybeListString(**FIELD_KWARGS)
+        # TODO(cancan101) check the dict
+        return AirtableFloat(**FIELD_KWARGS)
 
     return MaybeListString(**FIELD_KWARGS)
 

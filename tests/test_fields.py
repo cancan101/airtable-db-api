@@ -1,35 +1,88 @@
+import math
+
 import pytest
 
-from airtabledb.fields import MaybeListString
+from airtabledb.fields import AirtableFloat, AirtableScalar, MaybeList, MaybeListString
 
 
 def test_maybe_list_string_none():
-    assert MaybeListString().parse(None) is None
+    field = MaybeListString()
+
+    assert field.parse(None) is None
 
 
 def test_maybe_list_string_primitive():
-    assert MaybeListString().parse("a") == "a"
-    assert MaybeListString().parse(1) == 1
-    assert MaybeListString().parse(1.5) == 1.5
+    field = MaybeListString()
+
+    assert field.parse("a") == "a"
+    assert field.parse(1) == 1
+    assert field.parse(1.5) == 1.5
 
 
 def test_maybe_list_string_list():
-    assert MaybeListString().parse([]) is None
-    assert MaybeListString().parse(["a"]) == "a"
-    assert MaybeListString().parse([1]) == 1
-    assert MaybeListString().parse([1.5]) == 1.5
-    assert MaybeListString().parse([None]) is None
+    field = MaybeListString()
+
+    assert field.parse([]) is None
+    assert field.parse(["a"]) == "a"
+    assert field.parse([1]) == 1
+    assert field.parse([1.5]) == 1.5
+    assert field.parse([None]) is None
 
     with pytest.raises(TypeError):
-        assert MaybeListString().parse([{}])
+        assert field.parse([{}])
 
     # At some point we may handle this case differently (w/o error)
     with pytest.raises(ValueError):
-        assert MaybeListString().parse([1, 2])
+        assert field.parse([1, 2])
 
 
 def test_maybe_list_string_special():
-    assert MaybeListString().parse({"specialValue": "NaN"}) is None
+    field = MaybeListString()
+    assert math.isnan(field.parse({"specialValue": "NaN"}))
+    assert math.isnan(field.parse([{"specialValue": "NaN"}]))
+
+    with pytest.raises(ValueError):
+        field.parse({"specialValue": "XXX"})
+
+
+def test_airtable_float_special():
+    field = AirtableFloat()
+    assert math.isnan(field.parse({"specialValue": "NaN"}))
+    assert math.isinf(field.parse({"specialValue": "Infinity"}))
+    assert math.isinf(field.parse({"specialValue": "-Infinity"}))
+
+    with pytest.raises(ValueError):
+        field.parse({"specialValue": "XXX"})
+
+
+def test_maybe_list():
+    field = MaybeList(AirtableScalar())
+    assert field.parse(None) is None
+    assert field.parse([]) is None
+    assert field.parse(["a"]) == "a"
+    assert field.parse([1]) == 1
+    assert field.parse([1.5]) == 1.5
+    assert field.parse([None]) is None
 
     with pytest.raises(TypeError):
-        MaybeListString().parse({"specialValue": "XXX"})
+        assert field.parse([{}])
+
+    with pytest.raises(TypeError):
+        assert field.parse([b"asdf"])
+
+    # At some point we may handle this case differently (w/o error)
+    with pytest.raises(ValueError):
+        assert field.parse([1, 2])
+
+
+def test_airtable_scalar():
+    field = AirtableScalar()
+
+    assert field.parse(None) is None
+    assert field.parse(1) == 1
+    assert field.parse(1.5) == 1.5
+    assert field.parse("a") == "a"
+    assert math.isnan(field.parse({"specialValue": "NaN"}))
+
+    with pytest.raises(TypeError):
+        assert field.parse({})
