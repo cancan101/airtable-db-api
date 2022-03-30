@@ -1,5 +1,5 @@
 import urllib.parse
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Collection, Dict, List, Optional, Sequence, Tuple, Union
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
 from sqlalchemy.engine import Connection
@@ -42,6 +42,8 @@ class APSWAirtableDialect(APSWDialect):
         self,
         airtable_api_key: str = None,
         base_metadata: BaseMetadata = None,
+        # Ick:
+        date_columns: Dict[str, Collection[str]] = None,
         **kwargs: Any,
     ):
         # We tell Shillelagh that this dialect supports just one adapter
@@ -49,6 +51,7 @@ class APSWAirtableDialect(APSWDialect):
 
         self.airtable_api_key = airtable_api_key
         self.base_metadata = base_metadata
+        self.date_columns = date_columns
 
     def get_table_names(
         self, connection: Connection, schema: str = None, **kwargs: Any
@@ -93,6 +96,7 @@ class APSWAirtableDialect(APSWDialect):
                 "base_id": url_host,
                 "base_metadata": self.base_metadata,
                 "peek_rows": peek_rows,
+                "date_columns": self.date_columns,
             }
         }
 

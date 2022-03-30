@@ -95,6 +95,7 @@ class AirtableAdapter(Adapter):
         api_key: str,
         base_metadata: Optional[BaseMetadata],
         peek_rows: Optional[int],
+        # Ick:
         date_columns: Optional[Dict[str, Collection[str]]],
     ):
         super().__init__()
