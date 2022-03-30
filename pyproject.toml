@@ -7,12 +7,3 @@ exclude = '''
   )/
 )
 '''
-
-[tool.mypy]
-exclude = [
-    "^build/$",
-    # Can't type check as we don't install Superset:
-    "^airtabledb/db_engine_specs.py$",
-]
-
-plugins = "sqlalchemy.ext.mypy.plugin"
