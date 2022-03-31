@@ -25,18 +25,15 @@ INF_REPRESENTATION = AirtableFloatType(specialValue="Infinity")
 INF_NEG_REPRESENTATION = AirtableFloatType(specialValue="-Infinity")
 
 
-class MaybeListString(
-    Field[AirtableInputTypes, AirtablePrimitiveTypes]  # type: ignore
-):
-    # These types are not really "correct" given the polymorphism
-    type = "TEXT"
-    db_api_type = "STRING"
+class MaybeList(Field[AirtableInputTypes, AirtablePrimitiveTypes]):  # type: ignore
+    def __init__(self, field: Field, **kwargs) -> None:
+        super().__init__(**kwargs)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        self._scalar_handler = field
+        self._list_handler = OverList(field=self._scalar_handler)
 
-        self._scalar_handler = AirtableScalar()
-        self._list_handler = MaybeList(field=self._scalar_handler)
+        self.type = self._scalar_handler.type
+        self.db_api_type = self._scalar_handler.db_api_type
 
     def parse(
         self, value: Optional[AirtableInputTypes]
@@ -49,7 +46,12 @@ class MaybeListString(
             return self._scalar_handler.parse(value)
 
 
-class MaybeList(
+class MaybeListString(MaybeList):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(field=AirtableScalar(), **kwargs)
+
+
+class OverList(
     Field[List[AirtableRawInputTypes], AirtablePrimitiveTypes]  # type: ignore
 ):
     def __init__(self, field: Field, **kwargs):
@@ -63,6 +65,8 @@ class MaybeList(
     ) -> Optional[AirtablePrimitiveTypes]:
         if value is None:
             return None
+        elif not isinstance(value, list):
+            raise TypeError(f"Unknown type: {type(value)}")
         elif len(value) == 0:
             return None
         elif len(value) == 1:
@@ -106,8 +110,8 @@ class AirtableScalar(
     type = "TEXT"
     db_api_type = "STRING"
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
         self._string_handler = String()
         self._float_handler = AirtableFloat()

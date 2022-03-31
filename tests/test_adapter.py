@@ -1,28 +1,8 @@
-from shillelagh.fields import Boolean, Order, String
+import pytest
+from shillelagh.fields import Order
 
-from airtabledb import fields
-from airtabledb.adapter import get_airtable_sort, guess_field
-
-
-def test_guess_field():
-    assert type(guess_field([1])) is fields.AirtableFloat
-    assert type(guess_field([1.5])) is fields.AirtableFloat
-    assert type(guess_field([1, 1.5])) is fields.AirtableFloat
-
-    assert type(guess_field([True])) is Boolean
-
-    assert type(guess_field(["a"])) is String
-
-    assert type(guess_field([1, {"specialValue": "NaN"}])) is fields.AirtableFloat
-    assert type(guess_field([1.5, {"specialValue": "NaN"}])) is fields.AirtableFloat
-    assert type(guess_field([1.5, 1, {"specialValue": "NaN"}])) is fields.AirtableFloat
-
-    string_list_field = guess_field([["a"], ["b"]])
-    assert type(string_list_field) is fields.MaybeList
-    assert type(string_list_field.field) is String
-
-    # Not sure if this comes up in practice
-    assert type(guess_field(["a", 4])) is fields.MaybeListString
+from airtabledb.adapter import _get_table_by_name, get_airtable_sort
+from airtabledb.types import BaseMetadata, TableMetadata
 
 
 def test_get_airtable_sort():
@@ -31,3 +11,11 @@ def test_get_airtable_sort():
         "a",
         "-b",
     ]
+
+
+def test_get_table_by_name():
+    base_metadata: BaseMetadata = dict(tblFoo=TableMetadata(name="foo", columns=[]))
+    _get_table_by_name("foo", base_metadata=base_metadata)
+
+    with pytest.raises(IndexError):
+        _get_table_by_name("foox", base_metadata=base_metadata)

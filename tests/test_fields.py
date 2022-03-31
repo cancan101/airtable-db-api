@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from airtabledb.fields import AirtableFloat, AirtableScalar, MaybeList, MaybeListString
+from airtabledb.fields import AirtableFloat, AirtableScalar, MaybeListString, OverList
 
 
 def test_maybe_list_string_none():
@@ -56,7 +56,7 @@ def test_airtable_float_special():
 
 
 def test_maybe_list():
-    field = MaybeList(AirtableScalar())
+    field = OverList(AirtableScalar())
     assert field.parse(None) is None
     assert field.parse([]) is None
     assert field.parse(["a"]) == "a"
@@ -69,6 +69,9 @@ def test_maybe_list():
 
     with pytest.raises(TypeError):
         assert field.parse([b"asdf"])
+
+    with pytest.raises(TypeError):
+        assert field.parse("a")
 
     # At some point we may handle this case differently (w/o error)
     with pytest.raises(ValueError):
