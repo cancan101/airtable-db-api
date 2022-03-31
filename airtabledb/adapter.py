@@ -13,12 +13,13 @@ from typing import (
 
 from pyairtable import Table
 from shillelagh.adapters.base import Adapter
-from shillelagh.fields import Boolean, Field, ISODate, Order, String
+from shillelagh.fields import Field, ISODate, Order, String
 from shillelagh.filters import Equal, Filter, IsNotNull, IsNull, NotEqual, Range
 from shillelagh.typing import RequestedOrder
 
-from .fields import AirtableFloat, MaybeList, MaybeListString, OverList
+from .fields import MaybeList, MaybeListString
 from .formulas import get_airtable_formula
+from .lib import FieldInfo, guess_field
 from .types import BaseMetadata, TableMetadata, TypedDict
 
 # -----------------------------------------------------------------------------
@@ -35,36 +36,6 @@ FIELD_KWARGS: FieldKwargs = {
     "filters": [IsNull, IsNotNull, Range, Equal, NotEqual],
     "exact": True,
 }
-
-FieldInfo = Tuple[Type[Field], Dict[str, Any]]
-
-
-def guess_field(values: List[Any]) -> FieldInfo:
-    types = set(type(v) for v in values)
-    if len(types) == 1:
-        types0 = list(types)[0]
-        if types0 is str:
-            return String, {}
-        elif types0 is float:
-            return AirtableFloat, {}
-        elif types0 is int:
-            # This seems safest as there are cases where we get floats and ints
-            return AirtableFloat, {}
-        elif types0 is bool:
-            return Boolean, {}
-        elif types0 is list:
-            item_field_cls, item_field_kwargs = guess_field(
-                [v for vi in values for v in vi]
-            )
-            return OverList, {"field": item_field_cls(**item_field_kwargs)}
-    elif types == {float, int}:
-        return AirtableFloat, {}
-    elif types == {float, dict} or types == {int, dict} or types == {int, float, dict}:
-        # This seems safest as there are cases where we get floats and ints
-        # TODO(cancan101) check the dict
-        return AirtableFloat, {}
-
-    return MaybeListString, {}
 
 
 def get_airtable_sort(order: List[Tuple[str, RequestedOrder]]) -> List[str]:
