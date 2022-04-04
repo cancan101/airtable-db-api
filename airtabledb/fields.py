@@ -121,8 +121,6 @@ class AirtableFloat(
                 return math.inf
             elif value == INF_NEG_REPRESENTATION:
                 return -math.inf
-            elif value == INF_NEG_REPRESENTATION:
-                return -math.inf
             elif value == ERROR_REPRESENTATION:
                 # We could have mapped this to None as well
                 return math.nan
