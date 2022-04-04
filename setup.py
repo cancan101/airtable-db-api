@@ -1,4 +1,78 @@
-from setuptools import find_packages, setup
+import os
+import sys
+from shutil import rmtree
+
+from setuptools import Command, find_packages, setup
+
+# -----------------------------------------------------------------------------
+
+here = os.path.abspath(os.path.dirname(__file__))
+
+# -----------------------------------------------------------------------------
+
+
+class BaseCommand(Command):
+    @staticmethod
+    def status(s: str) -> None:
+        """Prints things in bold."""
+        print("\033[1m{0}\033[0m".format(s))  # noqa: T001
+
+    def system(self, command: str) -> None:
+        os.system(command)  # noqa: S605
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+
+class BuildCommand(BaseCommand):
+    """Support setup.py building."""
+
+    description = "Build the package."
+    user_options = []
+
+    def run(self):
+        try:
+            self.status("Removing previous builds…")
+            rmtree(os.path.join(here, "dist"))
+        except OSError:
+            pass
+
+        self.status("Building Source and Wheel (universal) distribution…")
+        self.system("{0} -m build --sdist --wheel .".format(sys.executable))
+
+        self.status("Checking wheel contents…")
+        self.system("check-wheel-contents dist/*.whl")
+
+        self.status("Running twine check…")
+        self.system("{0} -m twine check dist/*".format(sys.executable))
+
+
+class UploadTestCommand(BaseCommand):
+    """Support uploading to test PyPI."""
+
+    description = "Build the package."
+    user_options = []
+
+    def run(self):
+        self.status("Uploading the package to PyPi via Twine…")
+        self.system(
+            "twine upload --repository-url https://test.pypi.org/legacy/ dist/*"
+        )
+
+
+class UploadCommand(BaseCommand):
+    """Support uploading to PyPI."""
+
+    description = "Build the package."
+    user_options = []
+
+    def run(self):
+        self.status("Uploading the package to PyPi via Twine…")
+        self.system("twine upload dist/*")
+
 
 # -----------------------------------------------------------------------------
 
@@ -45,6 +119,8 @@ setup(
     ],
     # $ setup.py publish support.
     cmdclass={
-        # 'upload': UploadCommand,
+        "buildit": BuildCommand,
+        "uploadtest": UploadTestCommand,
+        "upload": UploadCommand,
     },
 )
