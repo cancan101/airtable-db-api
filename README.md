@@ -2,9 +2,9 @@
 A Python DB API 2.0 for Airtable
 
 This module allows you to query Airtable using SQL. It exposes:
-- A [Python DB API 2.0](https://peps.python.org/pep-0249/) (PEP 249)
-- A [SQLAlchemy Dialect](https://docs.sqlalchemy.org/en/14/dialects/) (see also ["Developing new Dialects"](https://github.com/zzzeek/sqlalchemy/blob/master/README.dialects.rst))
-- A [Superset Engine Spec](https://preset.io/blog/building-database-connector/)
+- a [Python DB API 2.0](https://peps.python.org/pep-0249/) (per PEP 249)
+- a [SQLAlchemy Dialect](https://docs.sqlalchemy.org/en/14/dialects/) (see also ["Developing new Dialects"](https://github.com/zzzeek/sqlalchemy/blob/master/README.dialects.rst))
+- a [Superset Engine Spec](https://preset.io/blog/building-database-connector/)
 
 ## SQLAlchemy support
 This module provides a SQLAlchemy dialect.
@@ -20,11 +20,11 @@ engine = create_engine(
 
 ## Metadata
 At various points we need to know:
-1) The list of tables supported in the Base
+1) The list of Tables supported in the Base
 2) The list of columns (Fields) supported on a given Table
 3) The type information for each Field
 
-As of now we solve 1) by passing in a list of tables using the `tables` query parameter on the URL.
+As of now we solve 1) by passing in a list of Tables using the `tables` query parameter on the URL.
 We solve 2) and 3) using some combination of the `peek_rows` query parameter specifying the number of rows to fetch from Airtable to guess Field types and a `date_columns` engine parameter to specify which columns should be parsed as `Date`s.
 
 Alternatively, 1-3 could all be solved with a comprehensive `base_metadata` engine parameter that specifies the Tables and Fields. There are a number of ways to generate this, but one approach is scraping the Base's API docs page using [a technique like this](https://github.com/aivantg/airtable-schema-generator/issues/47#issue-1165801153).
@@ -46,10 +46,16 @@ $ pip install -r requirements-dev.txt
 $ pre-commit install
 ```
 
+### `black`
+Can be run manually as:
+```bash
+black --target-version py37
+```
+
 ## Roadmap
 * [ ] Support for [Airtable's Metadata API](https://airtable.com/api/meta)
 * [ ] Support passed in Airtable Metadata (w/ types)
 * [ ] Cleanup configuration (passed as [query param on URL](https://docs.sqlalchemy.org/en/14/core/engines.html#database-urls) vs [engine parameters](https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.create_engine))
 * [ ] Built in Metadata scraper (not using Metadata API)
-* [ ] Cache peeking
+* [ ] Caching of field type "peeking"
 * [ ] Datetime support
