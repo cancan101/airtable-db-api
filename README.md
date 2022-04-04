@@ -1,4 +1,4 @@
-# airtable-db-api ![main workflow](https://github.com/cancan101/airtable-db-api/actions/workflows/main.yml/badge.svg) [![codecov](https://codecov.io/gh/cancan101/airtable-db-api/branch/main/graph/badge.svg?token=S8XR68NZCU)](https://codecov.io/gh/cancan101/airtable-db-api)
+# airtable-db-api [![PyPI version](https://badge.fury.io/py/sqlalchemy-airtable.svg)](https://badge.fury.io/py/sqlalchemy-airtable) ![main workflow](https://github.com/cancan101/airtable-db-api/actions/workflows/main.yml/badge.svg) [![codecov](https://codecov.io/gh/cancan101/airtable-db-api/branch/main/graph/badge.svg?token=S8XR68NZCU)](https://codecov.io/gh/cancan101/airtable-db-api)
 A Python DB API 2.0 for Airtable
 
 This module allows you to query Airtable using SQL. It exposes:
