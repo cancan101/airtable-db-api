@@ -80,7 +80,7 @@ DESCRIPTION = "Python DB-API and SQLAlchemy interface for Airtable."
 
 setup(
     name="sqlalchemy-airtable",
-    version="0.0.1.dev0",
+    version="0.0.1.dev1",
     description=DESCRIPTION,
     long_description=DESCRIPTION,
     author="Alex Rothberg",
