@@ -24,7 +24,11 @@ def guess_field(values: List[Any]) -> FieldInfo:
             item_field_cls, item_field_kwargs = guess_field(
                 [v for vi in values for v in vi]
             )
-            return OverList, {"field": item_field_cls(**item_field_kwargs)}
+            # TODO(cancan101): for now, we always set allow_multiple
+            return OverList, {
+                "field": item_field_cls(**item_field_kwargs),
+                "allow_multiple": True,
+            }
     elif types == {float, int}:
         return AirtableFloat, {}
     elif types == {float, dict} or types == {int, dict} or types == {int, float, dict}:
@@ -32,4 +36,6 @@ def guess_field(values: List[Any]) -> FieldInfo:
         # TODO(cancan101) check the dict
         return AirtableFloat, {}
 
-    return MaybeListString, {}
+    # Not totally sure when we hit this block
+    # TODO(cancan101): for now, we always set allow_multiple
+    return MaybeListString, {"allow_multiple": True}
