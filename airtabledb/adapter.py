@@ -13,7 +13,7 @@ from typing import (
 
 from pyairtable import Table
 from shillelagh.adapters.base import Adapter
-from shillelagh.fields import Field, ISODate, Order, String
+from shillelagh.fields import Field, ISODate, ISODateTime, Order, String
 from shillelagh.filters import Equal, Filter, IsNotNull, IsNull, NotEqual, Range
 from shillelagh.typing import RequestedOrder
 
@@ -87,7 +87,12 @@ class AirtableAdapter(Adapter):
             fields = [col["name"] for col in columns_metadata]
             self.strict_col = True
 
-            columns = {k: _create_field(MaybeListString, {}) for k in fields}
+            # For now just set allow_multiple = True here
+            # as we are not introspecting meta
+            columns = {
+                k: _create_field(MaybeListString, {"allow_multiple": True})
+                for k in fields
+            }
 
         # Attempts introspection by looking at data.
         # This is super not reliable
@@ -129,7 +134,14 @@ class AirtableAdapter(Adapter):
                 for k, v in field_values.items()
             }
 
-        self.columns = dict(columns, id=String())
+        # Right now I don't know how to sort on the backend:
+        # https://community.airtable.com/t/sort-on-rest-api-by-createdtime-without-adding-new-column/
+        # TODO(cancan101): implement filtering for id + createdTime
+        # using special formula.
+        # See:
+        # https://support.airtable.com/hc/en-us/articles/360051564873-Record-ID
+        # https://support.airtable.com/hc/en-us/articles/203255215-Formula-field-reference#record_functions
+        self.columns = dict(columns, id=String(), createdTime=ISODateTime())
 
     @staticmethod
     def supports(uri: str, fast: bool = True, **kwargs: Any) -> Optional[bool]:
@@ -165,4 +177,5 @@ class AirtableAdapter(Adapter):
                         if self.strict_col or k in self.columns
                     },
                     id=result["id"],
+                    createdTime=result["createdTime"],
                 )

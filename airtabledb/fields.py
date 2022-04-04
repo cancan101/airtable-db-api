@@ -1,3 +1,4 @@
+import json
 import math
 from typing import List, Optional, Union
 
@@ -8,8 +9,15 @@ from .types import TypedDict
 # -----------------------------------------------------------------------------
 
 
-class AirtableFloatType(TypedDict):
+class AirtableFloatTypeSpecial(TypedDict):
     specialValue: str
+
+
+class AirtableFloatTypeError(TypedDict):
+    error: str
+
+
+AirtableFloatType = Union[AirtableFloatTypeError, AirtableFloatTypeSpecial]
 
 
 AirtableRawNumericInputTypes = Union[int, float, AirtableFloatType]
@@ -19,18 +27,22 @@ AirtablePrimitiveTypes = Union[str, int, float]
 
 
 SPECIAL_VALUE_KEY = "specialValue"
+ERROR_VALUE_KEY = "error"
 
-NAN_REPRESENTATION = AirtableFloatType(specialValue="NaN")
-INF_REPRESENTATION = AirtableFloatType(specialValue="Infinity")
-INF_NEG_REPRESENTATION = AirtableFloatType(specialValue="-Infinity")
+NAN_REPRESENTATION = AirtableFloatTypeSpecial(specialValue="NaN")
+INF_REPRESENTATION = AirtableFloatTypeSpecial(specialValue="Infinity")
+INF_NEG_REPRESENTATION = AirtableFloatTypeSpecial(specialValue="-Infinity")
+ERROR_REPRESENTATION = AirtableFloatTypeError(error="#ERROR")
 
 
 class MaybeList(Field[AirtableInputTypes, AirtablePrimitiveTypes]):  # type: ignore
-    def __init__(self, field: Field, **kwargs) -> None:
+    def __init__(self, field: Field, *, allow_multiple=False, **kwargs) -> None:
         super().__init__(**kwargs)
 
         self._scalar_handler = field
-        self._list_handler = OverList(field=self._scalar_handler)
+        self._list_handler = OverList(
+            field=self._scalar_handler, allow_multiple=allow_multiple
+        )
 
         self.type = self._scalar_handler.type
         self.db_api_type = self._scalar_handler.db_api_type
@@ -54,11 +66,23 @@ class MaybeListString(MaybeList):
 class OverList(
     Field[List[AirtableRawInputTypes], AirtablePrimitiveTypes]  # type: ignore
 ):
-    def __init__(self, field: Field, **kwargs):
+    def __init__(self, field: Field, *, allow_multiple=False, **kwargs):
         super().__init__(**kwargs)
+
         self.field = field
+        self.allow_multiple = allow_multiple
+
         self.type = field.type
         self.db_api_type = field.db_api_type
+
+    def _parse_item(
+        self, value: AirtableRawInputTypes
+    ) -> Optional[AirtablePrimitiveTypes]:
+        # TODO(cancan101): Do we have to handle nested arrays?
+        # We handle dict here to allow for "special values"
+        if value is not None and not isinstance(value, (str, int, float, dict)):
+            raise TypeError(f"Unknown type: {type(value)}")
+        return self.field.parse(value)
 
     def parse(
         self, value: Optional[List[AirtableRawInputTypes]]
@@ -71,12 +95,11 @@ class OverList(
             return None
         elif len(value) == 1:
             ret = value[0]
-            # TODO(cancan101): Do we have to handle nested arrays?
-            # We handle dict here to allow for "special values"
-            if ret is not None and not isinstance(ret, (str, int, float, dict)):
-                raise TypeError(f"Unknown type: {type(ret)}")
-            return self.field.parse(ret)
+            return self._parse_item(ret)
         else:
+            if self.allow_multiple:
+                # TODO(cancan101): improvements to list formatting, None handling, etc:
+                return ", ".join(str(self._parse_item(v)) for v in value)
             raise ValueError("Unable to handle list of length > 1")
 
 
@@ -98,6 +121,9 @@ class AirtableFloat(
                 return math.inf
             elif value == INF_NEG_REPRESENTATION:
                 return -math.inf
+            elif value == ERROR_REPRESENTATION:
+                # We could have mapped this to None as well
+                return math.nan
             else:
                 raise ValueError(f"Unknown float representation: {value}")
         return value
@@ -125,7 +151,14 @@ class AirtableScalar(
             return self._string_handler.parse(value)
         elif isinstance(value, (int, float)):
             return self._float_handler.parse(value)
-        elif isinstance(value, dict) and len(value) == 1 and SPECIAL_VALUE_KEY in value:
+        elif (
+            isinstance(value, dict)
+            and len(value) == 1
+            and (SPECIAL_VALUE_KEY in value or ERROR_VALUE_KEY in value)
+        ):
             return self._float_handler.parse(value)
+        elif isinstance(value, dict) and "id" in value:
+            # e.g. Attachments
+            return json.dumps(value)
         else:
-            raise TypeError(f"Unknown type: {type(value)}")
+            raise TypeError(f"Unknown type: {type(value)} (value: {value})")

@@ -55,7 +55,15 @@ def test_airtable_float_special():
         field.parse({"specialValue": "XXX"})
 
 
-def test_maybe_list():
+def test_airtable_float_error():
+    field = AirtableFloat()
+    assert math.isnan(field.parse({"error": "#ERROR"}))
+
+    with pytest.raises(ValueError):
+        field.parse({"error": "XXX"})
+
+
+def test_over_list():
     field = OverList(AirtableScalar())
     assert field.parse(None) is None
     assert field.parse([]) is None
@@ -78,6 +86,11 @@ def test_maybe_list():
         assert field.parse([1, 2])
 
 
+def test_over_list_multiple():
+    field = OverList(AirtableScalar(), allow_multiple=True)
+    assert field.parse([1, 2]) == "1, 2"
+
+
 def test_airtable_scalar():
     field = AirtableScalar()
 
@@ -86,6 +99,11 @@ def test_airtable_scalar():
     assert field.parse(1.5) == 1.5
     assert field.parse("a") == "a"
     assert math.isnan(field.parse({"specialValue": "NaN"}))
+
+    assert (
+        field.parse({"id": "attXXXX", "url": "https://foo.local"})
+        == '{"id": "attXXXX", "url": "https://foo.local"}'
+    )
 
     with pytest.raises(TypeError):
         assert field.parse({})
