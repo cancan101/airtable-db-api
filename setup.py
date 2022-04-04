@@ -8,6 +8,11 @@ from setuptools import Command, find_packages, setup
 
 # -----------------------------------------------------------------------------
 
+DESCRIPTION = "Python DB-API and SQLAlchemy interface for Airtable."
+VERSION = "0.0.1.dev2"
+
+# -----------------------------------------------------------------------------
+
 here = os.path.abspath(os.path.dirname(__file__))
 
 # read the contents of your README file
@@ -79,14 +84,16 @@ class UploadCommand(BaseCommand):
         self.status("Uploading the package to PyPi via Twine…")
         self.system("twine upload dist/*")
 
+        self.status("Pushing git tags…")
+        self.system("git tag v{0}".format(VERSION))
+        self.system("git push --tags")
+
 
 # -----------------------------------------------------------------------------
 
-DESCRIPTION = "Python DB-API and SQLAlchemy interface for Airtable."
-
 setup(
     name="sqlalchemy-airtable",
-    version="0.0.1.dev1",
+    version=VERSION,
     description=DESCRIPTION,
     long_description=long_description,
     long_description_content_type=long_description_content_type,
