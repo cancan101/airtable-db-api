@@ -88,7 +88,7 @@ def test_over_list():
 
 def test_over_list_multiple():
     field = OverList(AirtableScalar(), allow_multiple=True)
-    assert field.parse([1, 2]) == "1,2"
+    assert field.parse([1, 2]) == "1, 2"
 
 
 def test_airtable_scalar():
