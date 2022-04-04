@@ -1,6 +1,8 @@
 import os
 import sys
+from pathlib import Path
 from shutil import rmtree
+from typing import List, Tuple
 
 from setuptools import Command, find_packages, setup
 
@@ -8,10 +10,17 @@ from setuptools import Command, find_packages, setup
 
 here = os.path.abspath(os.path.dirname(__file__))
 
+# read the contents of your README file
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
+long_description_content_type = "text/markdown; charset=UTF-8; variant=GFM"
+
 # -----------------------------------------------------------------------------
 
 
 class BaseCommand(Command):
+    user_options: List[Tuple[str, str, str]] = []
+
     @staticmethod
     def status(s: str) -> None:
         """Prints things in bold."""
@@ -31,7 +40,6 @@ class BuildCommand(BaseCommand):
     """Support setup.py building."""
 
     description = "Build the package."
-    user_options = []
 
     def run(self):
         try:
@@ -53,8 +61,7 @@ class BuildCommand(BaseCommand):
 class UploadTestCommand(BaseCommand):
     """Support uploading to test PyPI."""
 
-    description = "Build the package."
-    user_options = []
+    description = "Upload the package to the test PyPI."
 
     def run(self):
         self.status("Uploading the package to PyPi via Twine…")
@@ -66,8 +73,7 @@ class UploadTestCommand(BaseCommand):
 class UploadCommand(BaseCommand):
     """Support uploading to PyPI."""
 
-    description = "Build the package."
-    user_options = []
+    description = "Upload the package to PyPI."
 
     def run(self):
         self.status("Uploading the package to PyPi via Twine…")
@@ -82,7 +88,8 @@ setup(
     name="sqlalchemy-airtable",
     version="0.0.1.dev1",
     description=DESCRIPTION,
-    long_description=DESCRIPTION,
+    long_description=long_description,
+    long_description_content_type=long_description_content_type,
     author="Alex Rothberg",
     author_email="agrothberg@gmail.com",
     url="https://github.com/cancan101/airtable-db-api",
