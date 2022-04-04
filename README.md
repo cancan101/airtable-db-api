@@ -29,6 +29,8 @@ We solve 2) and 3) using some combination of the `peek_rows` query parameter spe
 
 Alternatively, 1-3 could all be solved with a comprehensive `base_metadata` engine parameter that specifies the Tables and Fields. There are a number of ways to generate this, but one approach is scraping the Base's API docs page using [a technique like this](https://github.com/aivantg/airtable-schema-generator/issues/47#issue-1165801153).
 
+Further options are [documented here](https://github.com/cancan101/airtable-db-api/wiki/Metadata)
+
 ## Installation
 I was having issues with `apsw-3.9.2.post1` (the newest version of `apsw` that would install for me from PyPI) and ended up needing to follow [the instructions here](https://shillelagh.readthedocs.io/en/latest/install.html) to build / install `apsw` from source. There is an [open ticket on the APSW project](https://github.com/rogerbinns/apsw/issues/310) to provide newer wheels. The issue might be triggered if the table name needs escaping and the error looked like:
 ```
