@@ -35,6 +35,15 @@ def test_get_formula_range():
         == "AND({the field} > 0,{the field} <= 33)"
     )
 
+    # Remap range to eq if start == end
+    assert (
+        get_formula(
+            "the field",
+            filters.Range(start=13, end=13, include_start=True, include_end=True),
+        )
+        == "{the field}=13"
+    )
+
 
 def test_get_airtable_formula():
     assert (
@@ -60,6 +69,8 @@ def test_get_formula_eq():
     assert get_formula("the field", filters.Equal(False)) == "{the field}=0"
 
     assert get_formula("the field", filters.Equal("foo bar")) == "{the field}='foo bar'"
+
+    assert get_formula("id", filters.Equal("reacasdf")) == "RECORD_ID()='reacasdf'"
 
 
 def test_get_formula_neq():

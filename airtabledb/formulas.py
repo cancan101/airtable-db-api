@@ -45,29 +45,48 @@ def STR_CAST(left: Any) -> str:
 
 
 def get_formula(field_name: str, filter: Filter) -> str:
-    if isinstance(filter, IsNull):
+    if field_name == "id":
+        return base_formulas.EQUAL(
+            "RECORD_ID()",
+            base_formulas.to_airtable_value(filter.value),
+        )
+    elif isinstance(filter, IsNull):
         # https://community.airtable.com/t/blank-zero-problem/5662/13
         return base_formulas.IF(STR_CAST(base_formulas.FIELD(field_name)), FALSE, TRUE)
     elif isinstance(filter, IsNotNull):
         # https://community.airtable.com/t/blank-zero-problem/5662/13
         return base_formulas.IF(STR_CAST(base_formulas.FIELD(field_name)), TRUE, FALSE)
     elif isinstance(filter, Range):
-        parts = []
-        if filter.start is not None:
-            start_airtable_value = base_formulas.to_airtable_value(filter.start)
-            if filter.include_start:
-                parts.append(GE(base_formulas.FIELD(field_name), start_airtable_value))
-            else:
-                parts.append(GT(base_formulas.FIELD(field_name), start_airtable_value))
+        if filter.start == filter.end and filter.include_start and filter.include_end:
+            return base_formulas.EQUAL(
+                base_formulas.FIELD(field_name),
+                base_formulas.to_airtable_value(filter.start),
+            )
+        else:
+            parts = []
+            if filter.start is not None:
+                start_airtable_value = base_formulas.to_airtable_value(filter.start)
+                if filter.include_start:
+                    parts.append(
+                        GE(base_formulas.FIELD(field_name), start_airtable_value)
+                    )
+                else:
+                    parts.append(
+                        GT(base_formulas.FIELD(field_name), start_airtable_value)
+                    )
 
-        if filter.end is not None:
-            end_airtable_value = base_formulas.to_airtable_value(filter.end)
-            if filter.include_end:
-                parts.append(LE(base_formulas.FIELD(field_name), end_airtable_value))
-            else:
-                parts.append(LT(base_formulas.FIELD(field_name), end_airtable_value))
+            if filter.end is not None:
+                end_airtable_value = base_formulas.to_airtable_value(filter.end)
+                if filter.include_end:
+                    parts.append(
+                        LE(base_formulas.FIELD(field_name), end_airtable_value)
+                    )
+                else:
+                    parts.append(
+                        LT(base_formulas.FIELD(field_name), end_airtable_value)
+                    )
 
-        return AND_BETTER(*parts)
+            return AND_BETTER(*parts)
     elif isinstance(filter, Equal):
         return base_formulas.EQUAL(
             base_formulas.FIELD(field_name),
