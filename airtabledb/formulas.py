@@ -6,6 +6,9 @@ from shillelagh.filters import Equal, Filter, IsNotNull, IsNull, NotEqual, Range
 BLANK = "BLANK()"
 TRUE = "TRUE()"
 FALSE = "FALSE()"
+RECORD_ID = "RECORD_ID()"
+
+ID_FIELD = "id"
 
 
 def AND_BETTER(*args):
@@ -45,9 +48,9 @@ def STR_CAST(left: Any) -> str:
 
 
 def get_formula(field_name: str, filter: Filter) -> str:
-    if field_name == "id":
+    if field_name == ID_FIELD:
         return base_formulas.EQUAL(
-            "RECORD_ID()",
+            RECORD_ID,
             base_formulas.to_airtable_value(filter.value),
         )
     elif isinstance(filter, IsNull):
