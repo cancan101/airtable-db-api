@@ -141,7 +141,9 @@ class AirtableAdapter(Adapter):
         # See:
         # https://support.airtable.com/hc/en-us/articles/360051564873-Record-ID
         # https://support.airtable.com/hc/en-us/articles/203255215-Formula-field-reference#record_functions
-        self.columns = dict(columns, id=String(), createdTime=ISODateTime())
+        self.columns = dict(
+            columns, id=String(filters=[Equal], exact=True), createdTime=ISODateTime()
+        )
 
     @staticmethod
     def supports(uri: str, fast: bool = True, **kwargs: Any) -> Optional[bool]:
