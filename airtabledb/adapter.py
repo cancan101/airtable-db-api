@@ -14,7 +14,15 @@ from typing import (
 from pyairtable import Table
 from shillelagh.adapters.base import Adapter
 from shillelagh.fields import Field, ISODate, ISODateTime, Order, String
-from shillelagh.filters import Equal, Filter, IsNotNull, IsNull, NotEqual, Range
+from shillelagh.filters import (
+    Equal,
+    Filter,
+    IsNotNull,
+    IsNull,
+    NotEqual,
+    Operator,
+    Range,
+)
 from shillelagh.typing import RequestedOrder
 
 from .fields import MaybeList, MaybeListString
@@ -179,3 +187,17 @@ class AirtableAdapter(Adapter):
                     id=result["id"],
                     createdTime=result["createdTime"],
                 )
+
+    def get_cost(
+        self,
+        filtered_columns: List[Tuple[str, Operator]],
+        order: List[Tuple[str, RequestedOrder]],
+    ) -> int:
+        if ("id", Operator.EQ) in filtered_columns:
+            return 100
+        elif any(operator is Operator.EQ for field_name, operator in filtered_columns):
+            return 110
+        elif len(filtered_columns) > 0:
+            return 150
+        else:
+            return 200
