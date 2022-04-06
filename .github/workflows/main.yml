@@ -30,7 +30,7 @@ jobs:
 
       - name: Test with black
         run: |
-          black . --check --target-version py39
+          black . --check --target-version py37
 
       - name: Test with flake8
         run: |
@@ -52,14 +52,14 @@ jobs:
       - name: Test with mypy
         run: |
           mypy .
-          
+
       - name: Install self
         run: |
           pip install --no-cache-dir --no-dependencies -e .
 
       - name: Test with pytest
         run: |
-          pytest --cov=./ --cov-report=xml          
+          pytest --cov=./ --cov-report=xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
