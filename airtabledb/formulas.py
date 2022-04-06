@@ -49,6 +49,9 @@ def STR_CAST(left: Any) -> str:
 
 def get_formula(field_name: str, filter: Filter) -> str:
     if field_name == ID_FIELD:
+        if not isinstance(filter, Equal):
+            raise NotImplementedError(field_name, filter)
+
         return base_formulas.EQUAL(
             RECORD_ID,
             base_formulas.to_airtable_value(filter.value),
