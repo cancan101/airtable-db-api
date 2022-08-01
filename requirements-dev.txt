@@ -162,7 +162,6 @@ six==1.16.0
     #   flake8-debugger
     #   flake8-print
     #   python-dateutil
-    #   virtualenv
 smmap==5.0.0
     # via gitdb
 sqlalchemy[mypy]==1.4.32
@@ -200,7 +199,7 @@ urllib3==1.26.9
     # via
     #   -r requirements.txt
     #   requests
-virtualenv==20.14.0
+virtualenv==20.16.2
     # via pre-commit
 wheel==0.37.1
     # via pip-tools
