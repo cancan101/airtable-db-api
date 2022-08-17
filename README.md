@@ -31,12 +31,6 @@ Alternatively, 1-3 could all be solved with a comprehensive `base_metadata` engi
 
 Further options are [documented here](https://github.com/cancan101/airtable-db-api/wiki/Metadata)
 
-## Installation
-I was having issues with `apsw-3.9.2.post1` (the newest version of `apsw` that would install for me from PyPI) and ended up needing to follow [the instructions here](https://shillelagh.readthedocs.io/en/latest/install.html) to build / install `apsw` from source. There is an [open ticket on the APSW project](https://github.com/rogerbinns/apsw/issues/310) to provide newer wheels. The issue might be triggered if the table name needs escaping and the error looked like:
-```
-SystemError: <method 'execute' of 'apsw.Cursor' objects> returned NULL without setting an exception
-```
-
 ## Development
 ### Python
 ```bash
