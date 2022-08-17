@@ -195,7 +195,7 @@ class AirtableAdapter(Adapter):
         self,
         filtered_columns: List[Tuple[str, Operator]],
         order: List[Tuple[str, RequestedOrder]],
-    ) -> int:
+    ) -> float:
         # Most of the cost here will come from network fetching / overhead
 
         if ("id", Operator.EQ) in filtered_columns:
