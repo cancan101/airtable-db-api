@@ -123,7 +123,7 @@ pre-commit==2.18.1
     # via -r requirements-dev.in
 py==1.11.0
     # via pytest
-pyairtable==1.1.0
+pyairtable==1.2.0
     # via -r requirements.txt
 pycodestyle==2.8.0
     # via
@@ -169,7 +169,7 @@ sqlalchemy[mypy]==1.4.32
     # via
     #   -r requirements.txt
     #   shillelagh
-sqlalchemy2-stubs==0.0.2a21
+sqlalchemy2-stubs==0.0.2a25
     # via
     #   -r requirements.txt
     #   sqlalchemy
@@ -188,7 +188,7 @@ tomli==2.0.1
     #   mypy
     #   pep517
     #   pytest
-types-setuptools==57.4.11
+types-setuptools==64.0.1
     # via -r requirements-dev.in
 typing-extensions==3.10.0.2
     # via
