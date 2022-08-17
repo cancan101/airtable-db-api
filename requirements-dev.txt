@@ -96,11 +96,9 @@ mccabe==0.6.1
 mypy==0.971
     # via
     #   -r requirements-dev.in
-    #   -r requirements.txt
     #   sqlalchemy
 mypy-extensions==0.4.3
     # via
-    #   -r requirements.txt
     #   black
     #   mypy
 nodeenv==1.6.0
@@ -173,9 +171,7 @@ sqlalchemy[mypy]==1.4.32
     #   -r requirements.txt
     #   shillelagh
 sqlalchemy2-stubs==0.0.2a25
-    # via
-    #   -r requirements.txt
-    #   sqlalchemy
+    # via sqlalchemy
 stevedore==3.5.0
     # via bandit
 testfixtures==6.18.5
@@ -184,7 +180,6 @@ toml==0.10.2
     # via pre-commit
 tomli==2.0.1
     # via
-    #   -r requirements.txt
     #   black
     #   build
     #   coverage

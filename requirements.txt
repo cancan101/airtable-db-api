@@ -14,10 +14,6 @@ greenlet==1.1.2
     # via sqlalchemy
 idna==3.3
     # via requests
-mypy==0.971
-    # via sqlalchemy
-mypy-extensions==0.4.3
-    # via mypy
 pyairtable==1.2.0
     # via -r requirements.in
 python-dateutil==2.8.2
@@ -30,19 +26,13 @@ shillelagh==1.1.0
     # via -r requirements.in
 six==1.16.0
     # via python-dateutil
-sqlalchemy[mypy]==1.4.32
+sqlalchemy==1.4.32
     # via
     #   -r requirements.in
     #   shillelagh
-sqlalchemy2-stubs==0.0.2a25
-    # via sqlalchemy
-tomli==2.0.1
-    # via mypy
 typing-extensions==3.10.0.2
     # via
     #   -r requirements.in
-    #   mypy
     #   shillelagh
-    #   sqlalchemy2-stubs
 urllib3==1.26.9
     # via requests
