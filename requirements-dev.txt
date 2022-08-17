@@ -101,7 +101,7 @@ mypy-extensions==0.4.3
     # via
     #   black
     #   mypy
-nodeenv==1.6.0
+nodeenv==1.7.0
     # via pre-commit
 packaging==21.3
     # via
@@ -168,6 +168,7 @@ smmap==5.0.0
     # via gitdb
 sqlalchemy[mypy]==1.4.32
     # via
+    #   -r requirements-dev.in
     #   -r requirements.txt
     #   shillelagh
 sqlalchemy2-stubs==0.0.2a25
