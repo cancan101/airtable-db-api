@@ -1,6 +1,7 @@
 from typing import Generator
 
 import pytest
+import responses
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection, Engine
 
@@ -14,3 +15,9 @@ def engine() -> Engine:
 def connection(engine: Engine) -> Generator[Connection, None, None]:
     with engine.connect() as connection:
         yield connection
+
+
+@pytest.fixture
+def mocked_responses() -> Generator[responses.RequestsMock, None, None]:
+    with responses.RequestsMock() as rsps:
+        yield rsps

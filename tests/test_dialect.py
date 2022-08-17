@@ -1,13 +1,46 @@
 from typing import Any, Dict
 
-from sqlalchemy import create_engine, inspect
+import responses
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.engine import URL, Connection, Engine, make_url
 
 from airtabledb.dialect import APSWAirtableDialect, extract_query_host
 
+# -----------------------------------------------------------------------------
+
 
 def test_create_engine(engine: Engine) -> None:
     pass
+
+
+def test_execute(
+    connection: Connection, mocked_responses: responses.RequestsMock
+) -> None:
+    mocked_responses.add(
+        method=responses.GET,
+        url="https://api.airtable.com/v0/base/foo",
+        json={
+            "records": [
+                {
+                    "id": "recXXX",
+                    "createdTime": "2022-03-07T20:25:26.000Z",
+                    "fields": {"baz": 1},
+                }
+            ]
+        },
+    )
+
+    result = connection.execute(
+        text(
+            """select
+                *
+            from
+                foo"""
+        )
+    )
+    rows = list(result)
+    assert len(rows) == 1
+    assert set(rows[0].keys()) == {"id", "createdTime", "baz"}
 
 
 def test_get_table_names_with_meta() -> None:
