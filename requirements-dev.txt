@@ -172,7 +172,7 @@ sqlalchemy[mypy]==1.4.32
     #   shillelagh
 sqlalchemy2-stubs==0.0.2a25
     # via sqlalchemy
-stevedore==3.5.0
+stevedore==4.0.0
     # via bandit
 toml==0.10.2
     # via pre-commit
