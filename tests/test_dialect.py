@@ -16,7 +16,7 @@ def test_create_engine(engine: Engine) -> None:
 def test_execute(
     connection: Connection, mocked_responses: responses.RequestsMock
 ) -> None:
-    mocked_responses.add(
+    response = mocked_responses.add(
         method=responses.GET,
         url="https://api.airtable.com/v0/base/foo",
         json={
@@ -41,6 +41,53 @@ def test_execute(
     rows = list(result)
     assert len(rows) == 1
     assert set(rows[0].keys()) == {"id", "createdTime", "baz"}
+    # once for data and once for probing
+    assert response.call_count == 2
+    # probe
+    assert (
+        mocked_responses.calls[0].request.url
+        == "https://api.airtable.com/v0/base/foo?pageSize=1&maxRecords=1"
+    )
+    assert (
+        mocked_responses.calls[-1].request.url == "https://api.airtable.com/v0/base/foo"
+    )
+
+
+def test_execute_limit(
+    connection: Connection, mocked_responses: responses.RequestsMock
+) -> None:
+    response = mocked_responses.add(
+        method=responses.GET,
+        url="https://api.airtable.com/v0/base/foo",
+        json={
+            "records": [
+                {
+                    "id": "recXXX",
+                    "createdTime": "2022-03-07T20:25:26.000Z",
+                    "fields": {"baz": 1},
+                }
+            ]
+        },
+    )
+
+    result = connection.execute(
+        text(
+            """SELECT
+                *
+            FROM
+                foo
+            LIMIT 2"""
+        )
+    )
+    rows = list(result)
+    assert len(rows) == 1
+    assert set(rows[0].keys()) == {"id", "createdTime", "baz"}
+    # once for data and once for probing
+    assert response.call_count == 2
+    assert (
+        mocked_responses.calls[-1].request.url
+        == "https://api.airtable.com/v0/base/foo?maxRecords=2"
+    )
 
 
 def test_get_table_names_with_meta() -> None:
