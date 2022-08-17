@@ -167,7 +167,6 @@ smmap==5.0.0
     # via gitdb
 sqlalchemy[mypy]==1.4.32
     # via
-    #   -r requirements-dev.in
     #   -r requirements.txt
     #   shillelagh
 sqlalchemy2-stubs==0.0.2a25
