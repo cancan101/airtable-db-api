@@ -168,8 +168,9 @@ six==1.16.0
     #   python-dateutil
 smmap==5.0.0
     # via gitdb
-sqlalchemy[mypy]==1.4.32
+sqlalchemy[mypy]==1.4.40
     # via
+    #   -r requirements-dev.in
     #   -r requirements.txt
     #   shillelagh
 sqlalchemy2-stubs==0.0.2a25
