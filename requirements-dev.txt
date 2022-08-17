@@ -101,7 +101,7 @@ mypy-extensions==0.4.3
     # via
     #   black
     #   mypy
-nodeenv==1.6.0
+nodeenv==1.7.0
     # via pre-commit
 packaging==21.3
     # via
