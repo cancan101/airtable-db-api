@@ -30,7 +30,7 @@ sqlalchemy==1.4.32
     # via
     #   -r requirements.in
     #   shillelagh
-typing-extensions==3.10.0.2
+typing-extensions==4.3.0
     # via
     #   -r requirements.in
     #   shillelagh
