@@ -121,7 +121,7 @@ platformdirs==2.5.2
     #   virtualenv
 pluggy==1.0.0
     # via pytest
-pre-commit==2.18.1
+pre-commit==2.20.0
     # via -r requirements-dev.in
 py==1.11.0
     # via pytest
@@ -168,6 +168,7 @@ smmap==5.0.0
     # via gitdb
 sqlalchemy[mypy]==1.4.32
     # via
+    #   -r requirements-dev.in
     #   -r requirements.txt
     #   shillelagh
 sqlalchemy2-stubs==0.0.2a25
