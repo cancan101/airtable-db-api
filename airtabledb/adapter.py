@@ -66,6 +66,7 @@ def _get_table_by_name(
 
 class AirtableAdapter(Adapter):
     safe = True
+    supports_limit = True
 
     def __init__(
         self,
@@ -169,6 +170,7 @@ class AirtableAdapter(Adapter):
         self,
         bounds: Dict[str, Filter],
         order: List[Tuple[str, RequestedOrder]],
+        limit: Optional[int] = None,
         **kwargs: Any,
     ) -> Iterator[Dict[str, Any]]:
         sort = get_airtable_sort(order)
@@ -178,8 +180,12 @@ class AirtableAdapter(Adapter):
         else:
             formula = None
 
+        options = {}
+        if limit is not None:
+            options["max_records"] = limit
+
         # Pass fields here
-        for page in self._table_api.iterate(sort=sort, formula=formula):
+        for page in self._table_api.iterate(sort=sort, formula=formula, **options):
             for result in page:
                 yield dict(
                     {
