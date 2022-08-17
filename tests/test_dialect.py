@@ -14,22 +14,10 @@ def test_create_engine(engine: Engine) -> None:
 
 
 def test_execute(
-    connection: Connection, mocked_responses: responses.RequestsMock
+    connection: Connection,
+    single_record: responses.BaseResponse,
+    mocked_responses: responses.RequestsMock,
 ) -> None:
-    response = mocked_responses.add(
-        method=responses.GET,
-        url="https://api.airtable.com/v0/base/foo",
-        json={
-            "records": [
-                {
-                    "id": "recXXX",
-                    "createdTime": "2022-03-07T20:25:26.000Z",
-                    "fields": {"baz": 1},
-                }
-            ]
-        },
-    )
-
     result = connection.execute(
         text(
             """select
@@ -42,7 +30,7 @@ def test_execute(
     assert len(rows) == 1
     assert set(rows[0].keys()) == {"id", "createdTime", "baz"}
     # once for data and once for probing
-    assert response.call_count == 2
+    assert single_record.call_count == 2
     # probe
     assert (
         mocked_responses.calls[0].request.url
@@ -54,22 +42,10 @@ def test_execute(
 
 
 def test_execute_limit(
-    connection: Connection, mocked_responses: responses.RequestsMock
+    connection: Connection,
+    single_record: responses.BaseResponse,
+    mocked_responses: responses.RequestsMock,
 ) -> None:
-    response = mocked_responses.add(
-        method=responses.GET,
-        url="https://api.airtable.com/v0/base/foo",
-        json={
-            "records": [
-                {
-                    "id": "recXXX",
-                    "createdTime": "2022-03-07T20:25:26.000Z",
-                    "fields": {"baz": 1},
-                }
-            ]
-        },
-    )
-
     result = connection.execute(
         text(
             """SELECT
@@ -83,7 +59,7 @@ def test_execute_limit(
     assert len(rows) == 1
     assert set(rows[0].keys()) == {"id", "createdTime", "baz"}
     # once for data and once for probing
-    assert response.call_count == 2
+    assert single_record.call_count == 2
     assert (
         mocked_responses.calls[-1].request.url
         == "https://api.airtable.com/v0/base/foo?maxRecords=2"
