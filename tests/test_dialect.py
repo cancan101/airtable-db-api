@@ -1,13 +1,69 @@
 from typing import Any, Dict
 
-from sqlalchemy import create_engine, inspect
+import responses
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.engine import URL, Connection, Engine, make_url
 
 from airtabledb.dialect import APSWAirtableDialect, extract_query_host
 
+# -----------------------------------------------------------------------------
+
 
 def test_create_engine(engine: Engine) -> None:
     pass
+
+
+def test_execute(
+    connection: Connection,
+    single_record: responses.BaseResponse,
+    mocked_responses: responses.RequestsMock,
+) -> None:
+    result = connection.execute(
+        text(
+            """select
+                *
+            from
+                foo"""
+        )
+    )
+    rows = list(result)
+    assert len(rows) == 1
+    assert set(rows[0].keys()) == {"id", "createdTime", "baz"}
+    # once for data and once for probing
+    assert single_record.call_count == 2
+    # probe
+    assert (
+        mocked_responses.calls[0].request.url
+        == "https://api.airtable.com/v0/base/foo?pageSize=1&maxRecords=1"
+    )
+    assert (
+        mocked_responses.calls[-1].request.url == "https://api.airtable.com/v0/base/foo"
+    )
+
+
+def test_execute_limit(
+    connection: Connection,
+    single_record: responses.BaseResponse,
+    mocked_responses: responses.RequestsMock,
+) -> None:
+    result = connection.execute(
+        text(
+            """SELECT
+                *
+            FROM
+                foo
+            LIMIT 2"""
+        )
+    )
+    rows = list(result)
+    assert len(rows) == 1
+    assert set(rows[0].keys()) == {"id", "createdTime", "baz"}
+    # once for data and once for probing
+    assert single_record.call_count == 2
+    assert (
+        mocked_responses.calls[-1].request.url
+        == "https://api.airtable.com/v0/base/foo?maxRecords=2"
+    )
 
 
 def test_get_table_names_with_meta() -> None:
