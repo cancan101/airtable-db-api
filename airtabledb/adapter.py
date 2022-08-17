@@ -169,6 +169,7 @@ class AirtableAdapter(Adapter):
         self,
         bounds: Dict[str, Filter],
         order: List[Tuple[str, RequestedOrder]],
+        **kwargs: Any,
     ) -> Iterator[Dict[str, Any]]:
         sort = get_airtable_sort(order)
 
