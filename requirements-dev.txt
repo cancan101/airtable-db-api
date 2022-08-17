@@ -4,7 +4,7 @@
 #
 #    pip-compile --resolver=backtracking requirements-dev.in
 #
-apsw==3.9.2.post1
+apsw==3.39.2.0
     # via
     #   -r requirements.txt
     #   shillelagh
@@ -95,11 +95,10 @@ mccabe==0.6.1
     # via flake8
 mypy==0.971
     # via
-    #   -r requirements.txt
+    #   -r requirements-dev.in
     #   sqlalchemy
 mypy-extensions==0.4.3
     # via
-    #   -r requirements.txt
     #   black
     #   mypy
 nodeenv==1.6.0
@@ -172,9 +171,7 @@ sqlalchemy[mypy]==1.4.32
     #   -r requirements.txt
     #   shillelagh
 sqlalchemy2-stubs==0.0.2a25
-    # via
-    #   -r requirements.txt
-    #   sqlalchemy
+    # via sqlalchemy
 stevedore==3.5.0
     # via bandit
 testfixtures==6.18.5
@@ -183,7 +180,6 @@ toml==0.10.2
     # via pre-commit
 tomli==2.0.1
     # via
-    #   -r requirements.txt
     #   black
     #   build
     #   coverage

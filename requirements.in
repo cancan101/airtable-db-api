@@ -1,4 +1,4 @@
 pyairtable
 shillelagh
-sqlalchemy[mypy]
+sqlalchemy
 typing-extensions

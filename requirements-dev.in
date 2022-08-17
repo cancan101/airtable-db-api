@@ -16,4 +16,5 @@ pip-tools
 pre-commit
 pytest
 pytest-cov
+sqlalchemy[mypy]
 types-setuptools
