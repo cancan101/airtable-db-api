@@ -1,11 +1,25 @@
+from __future__ import annotations
+
 import urllib.parse
-from typing import Any, Collection, Dict, List, Optional, Sequence, Tuple, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Collection,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Union,
+)
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
-from sqlalchemy.engine import Connection
-from sqlalchemy.engine.url import URL
 
 from .types import BaseMetadata
+
+if TYPE_CHECKING:
+    from sqlalchemy.engine import Connection
+    from sqlalchemy.engine.url import URL
 
 # -----------------------------------------------------------------------------
 
