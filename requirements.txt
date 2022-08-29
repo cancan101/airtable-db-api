@@ -14,7 +14,7 @@ greenlet==1.1.2
     # via sqlalchemy
 idna==3.3
     # via requests
-pyairtable==1.2.0
+pyairtable==1.3.0
     # via -r requirements.in
 python-dateutil==2.8.2
     # via shillelagh
