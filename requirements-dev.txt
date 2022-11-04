@@ -75,7 +75,7 @@ gitdb==4.0.9
     # via gitpython
 gitpython==3.1.27
     # via bandit
-greenlet==1.1.2
+greenlet==2.0.0.post0
     # via
     #   -r requirements.txt
     #   sqlalchemy
@@ -181,12 +181,8 @@ toml==0.10.2
     # via pre-commit
 tomli==2.0.1
     # via
-    #   black
-    #   build
     #   coverage
     #   flake8-black
-    #   mypy
-    #   pep517
     #   pytest
 types-setuptools==64.0.1
     # via -r requirements-dev.in
