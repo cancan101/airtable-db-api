@@ -93,7 +93,7 @@ isort==5.10.1
     #   flake8-isort
 mccabe==0.6.1
     # via flake8
-mypy==0.971
+mypy==0.982
     # via
     #   -r requirements-dev.in
     #   sqlalchemy
@@ -181,12 +181,8 @@ toml==0.10.2
     # via pre-commit
 tomli==2.0.1
     # via
-    #   black
-    #   build
     #   coverage
     #   flake8-black
-    #   mypy
-    #   pep517
     #   pytest
 types-setuptools==65.5.0.2
     # via -r requirements-dev.in
