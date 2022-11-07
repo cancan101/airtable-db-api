@@ -159,7 +159,7 @@ requests==2.28.1
     #   shillelagh
 responses==0.21.0
     # via -r requirements-dev.in
-shillelagh==1.1.0
+shillelagh==1.1.2
     # via -r requirements.txt
 six==1.16.0
     # via
@@ -181,12 +181,8 @@ toml==0.10.2
     # via pre-commit
 tomli==2.0.1
     # via
-    #   black
-    #   build
     #   coverage
     #   flake8-black
-    #   mypy
-    #   pep517
     #   pytest
 types-setuptools==65.5.0.2
     # via -r requirements-dev.in
