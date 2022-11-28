@@ -4,7 +4,7 @@
 #
 #    pip-compile --resolver=backtracking requirements-dev.in
 #
-apsw==3.39.2.0
+apsw==3.40.0.0
     # via
     #   -r requirements.txt
     #   shillelagh
@@ -181,12 +181,8 @@ toml==0.10.2
     # via pre-commit
 tomli==2.0.1
     # via
-    #   black
-    #   build
     #   coverage
     #   flake8-black
-    #   mypy
-    #   pep517
     #   pytest
 types-setuptools==65.5.0.2
     # via -r requirements-dev.in
