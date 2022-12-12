@@ -55,7 +55,7 @@ flake8-bandit==3.0.0
     # via -r requirements-dev.in
 flake8-black==0.3.3
     # via -r requirements-dev.in
-flake8-bugbear==22.3.23
+flake8-bugbear==22.12.6
     # via -r requirements-dev.in
 flake8-datetimez==20.10.0
     # via -r requirements-dev.in
@@ -181,12 +181,8 @@ toml==0.10.2
     # via pre-commit
 tomli==2.0.1
     # via
-    #   black
-    #   build
     #   coverage
     #   flake8-black
-    #   mypy
-    #   pep517
     #   pytest
 types-setuptools==65.5.0.2
     # via -r requirements-dev.in
