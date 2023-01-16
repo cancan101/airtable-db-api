@@ -157,7 +157,7 @@ requests==2.28.1
     #   pyairtable
     #   responses
     #   shillelagh
-responses==0.21.0
+responses==0.22.0
     # via -r requirements-dev.in
 shillelagh==1.1.5
     # via -r requirements.txt
