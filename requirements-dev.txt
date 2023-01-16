@@ -59,7 +59,7 @@ flake8-bugbear==22.3.23
     # via -r requirements-dev.in
 flake8-datetimez==20.10.0
     # via -r requirements-dev.in
-flake8-debugger==4.0.0
+flake8-debugger==4.1.2
     # via -r requirements-dev.in
 flake8-isort==4.2.0
     # via -r requirements-dev.in
@@ -164,7 +164,6 @@ shillelagh==1.1.5
 six==1.16.0
     # via
     #   -r requirements.txt
-    #   flake8-debugger
     #   python-dateutil
 smmap==5.0.0
     # via gitdb
