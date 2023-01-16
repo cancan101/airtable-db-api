@@ -54,10 +54,10 @@ class APSWAirtableDialect(APSWDialect):
 
     def __init__(
         self,
-        airtable_api_key: str = None,
-        base_metadata: BaseMetadata = None,
+        airtable_api_key: Optional[str] = None,
+        base_metadata: Optional[BaseMetadata] = None,
         # Ick:
-        date_columns: Dict[str, Collection[str]] = None,
+        date_columns: Optional[Dict[str, Collection[str]]] = None,
         **kwargs: Any,
     ):
         # We tell Shillelagh that this dialect supports just one adapter
@@ -68,7 +68,7 @@ class APSWAirtableDialect(APSWDialect):
         self.date_columns = date_columns
 
     def get_table_names(
-        self, connection: Connection, schema: str = None, **kwargs: Any
+        self, connection: Connection, schema: Optional[str] = None, **kwargs: Any
     ) -> List[str]:
         url_query, _ = extract_query_host(connection.engine.url)
         tables = url_query.get("tables")
