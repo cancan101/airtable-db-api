@@ -109,7 +109,7 @@ packaging==21.3
     #   pytest
 pathspec==0.9.0
     # via black
-pbr==5.10.0
+pbr==5.11.0
     # via stevedore
 pep517==0.13.0
     # via build
@@ -181,12 +181,8 @@ toml==0.10.2
     # via pre-commit
 tomli==2.0.1
     # via
-    #   black
-    #   build
     #   coverage
     #   flake8-black
-    #   mypy
-    #   pep517
     #   pytest
 types-setuptools==65.5.0.2
     # via -r requirements-dev.in
