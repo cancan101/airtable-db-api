@@ -33,12 +33,11 @@ def test_execute(
     assert single_record.call_count == 2
     # probe
     assert (
-        mocked_responses.calls[0].request.url
+        mocked_responses.calls[0].request.url  # type: ignore
         == "https://api.airtable.com/v0/base/foo?pageSize=1&maxRecords=1"
     )
-    assert (
-        mocked_responses.calls[-1].request.url == "https://api.airtable.com/v0/base/foo"
-    )
+    last_response_url = mocked_responses.calls[-1].request.url  # type: ignore
+    assert last_response_url == "https://api.airtable.com/v0/base/foo"
 
 
 def test_execute_limit(
@@ -61,7 +60,7 @@ def test_execute_limit(
     # once for data and once for probing
     assert single_record.call_count == 2
     assert (
-        mocked_responses.calls[-1].request.url
+        mocked_responses.calls[-1].request.url  # type: ignore
         == "https://api.airtable.com/v0/base/foo?maxRecords=2"
     )
 
