@@ -193,7 +193,7 @@ typing-extensions==4.3.0
     #   mypy
     #   shillelagh
     #   sqlalchemy2-stubs
-urllib3==1.26.12
+urllib3==1.26.15
     # via
     #   -r requirements.txt
     #   requests
