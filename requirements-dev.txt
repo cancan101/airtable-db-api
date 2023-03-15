@@ -113,7 +113,7 @@ pbr==5.11.0
     # via stevedore
 pip-tools==6.8.0
     # via -r requirements-dev.in
-platformdirs==2.5.2
+platformdirs==2.6.2
     # via
     #   black
     #   virtualenv
