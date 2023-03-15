@@ -12,7 +12,7 @@ charset-normalizer==2.1.1
     # via requests
 greenlet==2.0.1
     # via sqlalchemy
-idna==3.3
+idna==3.4
     # via requests
 pyairtable==1.3.0
     # via -r requirements.in
