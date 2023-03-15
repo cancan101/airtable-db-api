@@ -103,7 +103,7 @@ mypy-extensions==0.4.3
     #   mypy
 nodeenv==1.7.0
     # via pre-commit
-packaging==21.3
+packaging==23.0
     # via
     #   build
     #   pytest
@@ -133,8 +133,6 @@ pycodestyle==2.8.0
     #   flake8-print
 pyflakes==2.4.0
     # via flake8
-pyparsing==3.0.9
-    # via packaging
 pyproject-hooks==1.0.0
     # via build
 pytest==7.1.2
