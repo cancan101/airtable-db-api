@@ -38,7 +38,7 @@ coverage[toml]==6.3.2
     # via pytest-cov
 distlib==0.3.6
     # via virtualenv
-filelock==3.8.0
+filelock==3.9.0
     # via virtualenv
 flake8==4.0.1
     # via
