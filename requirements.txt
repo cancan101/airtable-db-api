@@ -4,7 +4,7 @@
 #
 #    pip-compile --resolver=backtracking requirements.in
 #
-apsw==3.40.1.0
+apsw==3.41.0.0
     # via shillelagh
 certifi==2022.12.7
     # via requests
