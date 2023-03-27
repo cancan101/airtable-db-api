@@ -4,7 +4,7 @@
 #
 #    pip-compile --resolver=backtracking requirements-dev.in
 #
-apsw==3.40.1.0
+apsw==3.41.2.0
     # via
     #   -r requirements.txt
     #   shillelagh
