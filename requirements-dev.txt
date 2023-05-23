@@ -150,13 +150,14 @@ pyyaml==6.0
     # via
     #   bandit
     #   pre-commit
+    #   responses
 requests==2.28.1
     # via
     #   -r requirements.txt
     #   pyairtable
     #   responses
     #   shillelagh
-responses==0.22.0
+responses==0.23.1
     # via -r requirements-dev.in
 shillelagh==1.1.5
     # via -r requirements.txt
@@ -176,17 +177,15 @@ sqlalchemy2-stubs==0.0.2a31
 stevedore==5.0.0
     # via bandit
 toml==0.10.2
-    # via
-    #   pre-commit
-    #   responses
+    # via pre-commit
 tomli==2.0.1
     # via
     #   coverage
     #   pytest
+types-pyyaml==6.0.12.10
+    # via responses
 types-setuptools==65.5.0.2
     # via -r requirements-dev.in
-types-toml==0.10.8.6
-    # via responses
 typing-extensions==4.3.0
     # via
     #   -r requirements.txt
