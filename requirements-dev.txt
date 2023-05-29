@@ -186,7 +186,7 @@ types-pyyaml==6.0.12.10
     # via responses
 types-setuptools==65.5.0.2
     # via -r requirements-dev.in
-typing-extensions==4.3.0
+typing-extensions==4.6.2
     # via
     #   -r requirements.txt
     #   mypy
