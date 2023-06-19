@@ -120,7 +120,7 @@ platformdirs==3.6.0
     #   virtualenv
 pluggy==1.0.0
     # via pytest
-pre-commit==2.20.0
+pre-commit==3.3.3
     # via -r requirements-dev.in
 py==1.11.0
     # via pytest
@@ -176,8 +176,6 @@ sqlalchemy2-stubs==0.0.2a31
     # via sqlalchemy
 stevedore==5.1.0
     # via bandit
-toml==0.10.2
-    # via pre-commit
 tomli==2.0.1
     # via
     #   coverage
