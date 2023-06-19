@@ -38,7 +38,7 @@ coverage[toml]==6.3.2
     # via pytest-cov
 distlib==0.3.6
     # via virtualenv
-filelock==3.9.0
+filelock==3.12.2
     # via virtualenv
 flake8==4.0.1
     # via
@@ -114,7 +114,7 @@ pbr==5.11.1
     # via stevedore
 pip-tools==6.13.0
     # via -r requirements-dev.in
-platformdirs==2.6.2
+platformdirs==3.6.0
     # via
     #   black
     #   virtualenv
@@ -197,7 +197,7 @@ urllib3==1.26.16
     #   -r requirements.txt
     #   requests
     #   responses
-virtualenv==20.16.3
+virtualenv==20.23.1
     # via pre-commit
 wheel==0.38.4
     # via pip-tools
