@@ -12,7 +12,7 @@ attrs==23.1.0
     # via
     #   flake8-bugbear
     #   pytest
-bandit==1.7.4
+bandit==1.7.5
     # via flake8-bandit
 black==23.3.0
     # via
@@ -91,8 +91,12 @@ isort==5.12.0
     # via
     #   -r requirements-dev.in
     #   flake8-isort
+markdown-it-py==3.0.0
+    # via rich
 mccabe==0.6.1
     # via flake8
+mdurl==0.1.2
+    # via markdown-it-py
 mypy==0.991
     # via
     #   -r requirements-dev.in
@@ -134,6 +138,8 @@ pycodestyle==2.8.0
     #   flake8-print
 pyflakes==2.4.0
     # via flake8
+pygments==2.15.1
+    # via rich
 pyproject-hooks==1.0.0
     # via build
 pytest==7.1.2
@@ -159,6 +165,8 @@ requests==2.28.1
     #   shillelagh
 responses==0.23.1
     # via -r requirements-dev.in
+rich==13.4.2
+    # via bandit
 shillelagh==1.1.5
     # via -r requirements.txt
 six==1.16.0
