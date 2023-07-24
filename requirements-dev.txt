@@ -182,7 +182,7 @@ tomli==2.0.1
     #   pytest
 types-pyyaml==6.0.12.10
     # via responses
-types-setuptools==65.5.0.2
+types-setuptools==68.0.0.3
     # via -r requirements-dev.in
 typing-extensions==4.6.3
     # via
