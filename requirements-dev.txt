@@ -4,6 +4,10 @@
 #
 #    pip-compile --resolver=backtracking requirements-dev.in
 #
+annotated-types==0.5.0
+    # via
+    #   -r requirements.txt
+    #   pydantic
 apsw==3.42.0.0
     # via
     #   -r requirements.txt
@@ -85,6 +89,10 @@ idna==3.4
     # via
     #   -r requirements.txt
     #   requests
+inflection==0.5.1
+    # via
+    #   -r requirements.txt
+    #   pyairtable
 iniconfig==2.0.0
     # via pytest
 isort==5.12.0
@@ -124,7 +132,7 @@ pre-commit==3.3.3
     # via -r requirements-dev.in
 py==1.11.0
     # via pytest
-pyairtable==1.3.0
+pyairtable==2.1.0.post1
     # via -r requirements.txt
 pycodestyle==2.8.0
     # via
@@ -132,6 +140,14 @@ pycodestyle==2.8.0
     #   flake8-bandit
     #   flake8-debugger
     #   flake8-print
+pydantic==2.3.0
+    # via
+    #   -r requirements.txt
+    #   pyairtable
+pydantic-core==2.6.3
+    # via
+    #   -r requirements.txt
+    #   pydantic
 pyflakes==2.4.0
     # via flake8
 pyproject-hooks==1.0.0
@@ -188,11 +204,15 @@ typing-extensions==4.6.3
     # via
     #   -r requirements.txt
     #   mypy
+    #   pyairtable
+    #   pydantic
+    #   pydantic-core
     #   shillelagh
     #   sqlalchemy2-stubs
 urllib3==1.26.16
     # via
     #   -r requirements.txt
+    #   pyairtable
     #   requests
     #   responses
 virtualenv==20.23.1
