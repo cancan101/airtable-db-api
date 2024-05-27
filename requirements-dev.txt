@@ -36,6 +36,8 @@ coverage[toml]==6.3.2
     # via pytest-cov
 distlib==0.3.6
     # via virtualenv
+exceptiongroup==1.2.1
+    # via pytest
 filelock==3.12.2
     # via virtualenv
 flake8==4.0.1
@@ -173,10 +175,17 @@ sqlalchemy2-stubs==0.0.2a31
 stevedore==5.1.0
     # via bandit
 tomli==2.0.1
-    # via coverage
+    # via
+    #   black
+    #   build
+    #   coverage
+    #   flake8-black
+    #   mypy
+    #   pyproject-hooks
+    #   pytest
 types-pyyaml==6.0.12.10
     # via responses
-types-setuptools==65.5.0.2
+types-setuptools==70.0.0.20240524
     # via -r requirements-dev.in
 typing-extensions==4.6.3
     # via
