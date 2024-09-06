@@ -50,6 +50,8 @@ def extract_query_host(
 
 
 class APSWAirtableDialect(APSWDialect):
+    name = "airtable"
+
     supports_statement_cache = True
 
     def __init__(
